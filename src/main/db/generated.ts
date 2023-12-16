@@ -13,6 +13,7 @@ const tables = [
       { name: "title", type: "string" },
       { name: "tags", type: "multiple" },
       { name: "content", type: "json" },
+      { name: "textContent", type: "text" },
     ],
   },
 ] as const;

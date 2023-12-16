@@ -25,9 +25,10 @@
           scrollbar="~ thin thumb-rounded-md thumb-gray-400 track-gray-100"
           overscroll="auto"
         >
-          <LexicalRichTextPlugin>
+          <LexicalRichTextPlugin >
             <template #contentEditable>
               <LexicalContentEditable
+      ref="editor"
                 class="editor-input"
                 outline="none"
                 h="full"
@@ -70,32 +71,43 @@ import {
   LexicalMarkdownShortcutPlugin,
   LexicalOnChangePlugin,
   LexicalRichTextPlugin,
+  useEditor
 } from 'lexical-vue'
 import { HeadingNode, QuoteNode } from '@lexical/rich-text'
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
 import { ListItemNode, ListNode } from '@lexical/list'
 import { CodeHighlightNode, CodeNode } from '@lexical/code'
 import { AutoLinkNode, LinkNode } from '@lexical/link'
-import type { CreateEditorArgs, EditorState } from 'lexical'
+import { $getRoot, type CreateEditorArgs, type EditorState, createEditor } from 'lexical'
 
 import AutoLinkPlugin from './Editor/AutoLinkPlugin.vue'
 import CodeHighlightPlugin from './Editor/CodeHighlightPlugin.vue'
 import ToolbarPlugin from './Editor/ToolbarPlugin.vue'
 
-interface Emits {
-  (name: 'update:content', value: EditorState): void
+export interface SaveContent {
+  json: any
+  text: string
 }
 
-// interface Props {
-//   content: EditorState
-// }
+interface Emits {
+  (name: 'update:content', value: SaveContent): void
+}
 
-// const props = defineProps<Props>()
+interface Props {
+  content?: any
+}
+
+const props = defineProps<Props>()
 
 const emits = defineEmits<Emits>()
 
+const editor = ref()
+watch(editor, editor => {
+  console.log({ editor })
+})
 const config: CreateEditorArgs = {
   editable: true,
+  editorState: undefined,
   theme: {
     // Theme styling goes here
   },
@@ -119,11 +131,30 @@ function onError(error: Error) {
   throw error
 }
 
-// const content = useVModel(props, 'content', emits, { deep: true, passive: true })
-// watchEffect(() => {
-//   console.log(content.value)
-// })
-function onChange(content: EditorState) {
-  emits('update:content', content)
+const content = ref<EditorState>()
+
+const onChange = useDebounceFn((state: EditorState) => {
+  content.value = state
+  emits('update:content', {
+    json: state.toJSON(),
+    text: state.read(() => $getRoot().getTextContent()),
+  })
+}, 1000)
+
+function save(): SaveContent {
+  console.log('content', content.value)
+  if (!content.value) {
+    return {
+      json: {},
+      text: '',
+    }
+  }
+
+  return {
+    json: content.value?.toJSON(),
+    text: content.value?.read(() => $getRoot().getTextContent()),
+  }
 }
+
+defineExpose({ save })
 </script>

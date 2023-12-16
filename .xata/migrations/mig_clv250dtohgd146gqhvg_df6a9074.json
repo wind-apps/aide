@@ -1,0 +1,16 @@
+{
+  "id": "mig_clv250dtohgd146gqhvg",
+  "parentID": "mig_clv19iudm0m1e2np1tag",
+  "checksum": "1:df6a9074736d9b11062fe5a000a046bcbbb61dc5cb3bfb1cec2000fc8cda7fa8",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "textContent",
+          "type": "text"
+        },
+        "table": "items"
+      }
+    }
+  ]
+}

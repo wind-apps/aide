@@ -9,7 +9,8 @@ import { publicProcedure, router } from './trpc'
 const item = vine.object({
   title: vine.string().minLength(1),
   tags: vine.array(vine.string().minLength(1)).minLength(0),
-  content: vine.any(),
+  content: vine.any().optional(),
+  textContent: vine.string().optional()
 })
 
 // @ts-expect-error We can't pull in the base types from Vine, but this works anyway
