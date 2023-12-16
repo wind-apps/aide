@@ -3,8 +3,8 @@
 
 <template>
   <div>
-    <PLink :to="{ name: '/items/create' }">
+    <Link :to="{ name: '/items/create' }">
       Create Item
-    </PLink>
+    </Link>
   </div>
 </template>

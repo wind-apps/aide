@@ -16,41 +16,139 @@
       overflow="hidden"
     >
       <div
-        flex="~ col"
-        justify="start"
-        align="items-start"
+        flex="~ row"
+        align="items-center"
+        gap="8"
       >
-        <PInputText
-          name="title"
-          placeholder="Title"
+        <n-form-item
+          flex="grow"
+          label="Title"
+          :validation-status="validationStatus('title')"
+          :feedback="validationErrors.title"
+        >
+          <n-input
+            v-model:value="title"
+            size="large"
+            name="title"
+            placeholder="Title"
+            aria-label="Add a title for this item"
+          >
+            <template #prefix>
+              <n-icon>
+                <IconType />
+              </n-icon>
+            </template>
+          </n-input>
+        </n-form-item>
+        <n-button
+          type="primary"
           size="large"
-          w="full"
-          aria-label="Add a title for this item"
-        />
+          flex="grow-0 shrink-0"
+          @click="save"
+        >
+          Save
+          <template #icon>
+            <NIcon>
+              <IconSave />
+            </NIcon>
+          </template>
+        </n-button>
       </div>
       <div
+        w="full"
         flex="~ col"
-        justify="start"
-        align="items-start"
+        gap="2"
       >
-        <PChips
-          v-model="tags"
-          w="full children:full"
-          placeholder="Tags"
-          :style="{ width: '100%' }"
-          :allow-duplicate="false"
-          aria-label="Add tags to this item"
-        />
+        <n-dynamic-tags
+          v-model:value="tags"
+          size="medium"
+        >
+          <template #input="{ submit, deactivate }">
+            <n-auto-complete
+              ref="tagInputEl"
+              v-model:value="tagInput"
+              :options="options"
+              placeholder="Search for tags"
+              clear-after-select
+              clearable
+              size="small"
+              @select="submit($event)"
+              @keyup.enter="handleEnterTag(submit)"
+              @blur="deactivate"
+              @vue:mounted="mountedInput"
+            />
+          </template>
+          <template #trigger="{ activate, disabled }">
+            <n-button
+              type="primary"
+              dashed
+              size="small"
+              :disabled="disabled"
+              @click="activate()"
+            >
+              <template #icon>
+                <n-icon>
+                  <IconPlus />
+                </n-icon>
+              </template>
+              New Tag
+            </n-button>
+          </template>
+        </n-dynamic-tags>
       </div>
-      <Editor />
+      <Editor v-model:content="editor" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import type { EditorState } from 'lexical'
+import { klona } from 'klona'
 
+const title = ref('')
 
-const tags = ref([])
+const tagInput = ref('')
+const initialTags = ['design', 'frontend', 'sdk']
+const options = computed(() => tagInput.value ? initialTags.filter(tag => tag.toLowerCase().includes(tagInput.value.toLowerCase())) : initialTags)
 
+const tags = ref<string[]>([])
+function handleEnterTag(cb: (value: string) => void) {
+  cb(tagInput.value)
+  tagInput.value = ''
+}
 
+const tagInputEl = ref<HTMLElement | null>()
+function mountedInput() {
+  tagInputEl.value?.focus()
+}
+
+const editor = ref<EditorState>()
+
+const trpc = useTRPC()
+
+const validationErrors = ref<Record<string, string>>({})
+
+function validationStatus(field: string) {
+  return Reflect.has(validationErrors.value, field) ? 'error' : undefined
+}
+
+async function save() {
+  try {
+    await trpc.itemCreate.mutate(klona({
+      title: toValue(title),
+      tags: toValue(tags),
+      content: editor.value?.toJSON(),
+    }))
+  }
+  catch (err) {
+    const error = err as Error & { data?: { validation?: { message: string, field: string }[] } }
+    console.error(error)
+
+    if (error.data?.validation) {
+      console.log(error.data.validation)
+      console.log(Object.fromEntries(error.data.validation.map(err => [err.field, err.message])))
+      validationErrors.value = Object.fromEntries(error.data.validation.map(err => [err.field, err.message]))
+    }
+  }
+}
 </script>

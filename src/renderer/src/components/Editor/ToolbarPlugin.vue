@@ -95,8 +95,7 @@ function updateToolbar() {
           // @ts-expect-error: Missing internal types
           ? (element as ListNode).getTag()
           : element.getType()
-        if ($isCodeNode(element))
-          codeLanguage.value = element.getLanguage() || getDefaultCodeLanguage()
+        if ($isCodeNode(element)) { codeLanguage.value = element.getLanguage() || getDefaultCodeLanguage() }
       }
     }
     // Update text format
@@ -110,10 +109,8 @@ function updateToolbar() {
     // Update links
     const node = getSelectedNode(selection)
     const parent = node.getParent()
-    if ($isLinkNode(parent) || $isLinkNode(node))
-      isLink.value = true
-    else
-      isLink.value = false
+    if ($isLinkNode(parent) || $isLinkNode(node)) { isLink.value = true }
+    else { isLink.value = false }
   }
 }
 
@@ -156,19 +153,16 @@ onMounted(() => {
 const codeLanguages = getCodeLanguages() as string[]
 
 function insertLink() {
-  if (!isLink.value)
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://')
+  if (!isLink.value) { editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://') }
 
-  else
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, null)
+  else { editor.dispatchCommand(TOGGLE_LINK_COMMAND, null) }
 }
 
 watch(codeLanguage, (value) => {
   editor.update(() => {
     if (selectedElementKey.value) {
       const node = $getNodeByKey(selectedElementKey.value)
-      if ($isCodeNode(node))
-        node.setLanguage(value)
+      if ($isCodeNode(node)) { node.setLanguage(value) }
     }
   })
 })
@@ -188,28 +182,37 @@ onUnmounted(() => {
     p="4"
     border="b-1 solid $surface-300"
   >
-    <span class="p-buttonset">
-      <p-button
+    <n-button-group>
+      <n-button
+      round
         :disabled="!canUndo"
-        class="toolbar-item spaced"
         aria-label="Undo"
-        icon="pi pi-undo"
         size="small"
         @click="editor.dispatchCommand(UNDO_COMMAND, undefined)"
-      />
-      <p-button
+      >
+        <template #icon>
+          <n-icon>
+            <IconUndo />
+          </n-icon>
+        </template>
+      </n-button>
+      <n-button
+        round
         :disabled="!canRedo"
-        class="toolbar-item spaced"
         aria-label="Redo"
-        icon="pi pi-undo"
-        transform="~ rotate-y-180"
         size="small"
         @click="editor.dispatchCommand(REDO_COMMAND, undefined)"
-      />
-    </span>
+      >
+        <template #icon>
+          <n-icon>
+            <IconRedo />
+          </n-icon>
+        </template>
+      </n-button>
+    </n-button-group>
     <Divider />
     <template v-if="supportedBlockTypes.has(blockType)">
-      <p-button
+      <n-button
         size="small"
         text
         class="toolbar-item block-controls"
@@ -219,7 +222,7 @@ onUnmounted(() => {
         <span :class="`icon block-type ${blockType}`" />
         <span class="text">{{ blockTypeToBlockName[blockType] }}</span>
         <i class="pi pi-chevron-down" />
-      </p-button>
+      </n-button>
       <Teleport to="body">
         <BlockOptionsDropdownList
           v-if="showBlockOptionsDropDown"

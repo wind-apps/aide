@@ -20,5 +20,6 @@ module.exports = antfu({
     'vue/block-order': ['error', {
       order: [['template', 'script'], 'style'],
     }],
+    'curly': ['error', 'multi-line', 'consistent'],
   },
 })

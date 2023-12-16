@@ -50,6 +50,9 @@
           <LexicalLinkPlugin />
           <AutoLinkPlugin />
           <LexicalMarkdownShortcutPlugin />
+          <LexicalOnChangePlugin
+            @change="onChange"
+          />
         </div>
       </div>
     </LexicalComposer>
@@ -65,6 +68,7 @@ import {
   LexicalLinkPlugin,
   LexicalListPlugin,
   LexicalMarkdownShortcutPlugin,
+  LexicalOnChangePlugin,
   LexicalRichTextPlugin,
 } from 'lexical-vue'
 import { HeadingNode, QuoteNode } from '@lexical/rich-text'
@@ -72,11 +76,23 @@ import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
 import { ListItemNode, ListNode } from '@lexical/list'
 import { CodeHighlightNode, CodeNode } from '@lexical/code'
 import { AutoLinkNode, LinkNode } from '@lexical/link'
-import type { CreateEditorArgs } from 'lexical'
+import type { CreateEditorArgs, EditorState } from 'lexical'
 
 import AutoLinkPlugin from './Editor/AutoLinkPlugin.vue'
 import CodeHighlightPlugin from './Editor/CodeHighlightPlugin.vue'
 import ToolbarPlugin from './Editor/ToolbarPlugin.vue'
+
+interface Emits {
+  (name: 'update:content', value: EditorState): void
+}
+
+// interface Props {
+//   content: EditorState
+// }
+
+// const props = defineProps<Props>()
+
+const emits = defineEmits<Emits>()
 
 const config: CreateEditorArgs = {
   editable: true,
@@ -98,7 +114,16 @@ const config: CreateEditorArgs = {
   ],
 }
 
-function onError(error) {
+function onError(error: Error) {
+  console.error(error)
   throw error
+}
+
+// const content = useVModel(props, 'content', emits, { deep: true, passive: true })
+// watchEffect(() => {
+//   console.log(content.value)
+// })
+function onChange(content: EditorState) {
+  emits('update:content', content)
 }
 </script>

@@ -7,6 +7,9 @@ export default defineConfig({
     scrollbar,
   ],
   theme: {
+    fontFamily: {
+      sans: ['Lexend', 'sans']
+    },
     extend: {},
   },
   variants: {

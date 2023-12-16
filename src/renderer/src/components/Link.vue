@@ -14,7 +14,7 @@ function navigate() {
 </script>
 
 <template>
-  <PButton @click="navigate">
+  <NButton @click="navigate">
     <slot />
-  </PButton>
+  </NButton>
 </template>

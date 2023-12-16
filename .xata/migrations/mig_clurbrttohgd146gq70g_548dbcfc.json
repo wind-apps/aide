@@ -1,0 +1,16 @@
+{
+  "id": "mig_clurbrttohgd146gq70g",
+  "parentID": "mig_clur0fmdm0m1e2np0dlg",
+  "checksum": "1:548dbcfc966f3297998008c104f919e68674b79292642734f7eac0d4a5084179",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "tags",
+          "type": "multiple"
+        },
+        "table": "items"
+      }
+    }
+  ]
+}
