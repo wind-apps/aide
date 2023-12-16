@@ -26,6 +26,3 @@ import TRPC from './components/TRPC.vue';
   </Suspense>
 </template>
 
-<style lang="scss">
-@import './assets/css/styles.scss';
-</style>
