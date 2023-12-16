@@ -9,6 +9,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     PButton: typeof import('primevue/button')['default']
     PInputText: typeof import('primevue/inputtext')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
     TRPC: typeof import('./components/TRPC.vue')['default']
     Versions: typeof import('./components/Versions.vue')['default']
   }

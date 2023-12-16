@@ -21,9 +21,8 @@ const items = ref(initial)
 
 trpc.itemSub.subscribe(undefined, {
   onData: (user) => {
-  console.log('got data!', user)
-  items.value.push(user)
-}
+    items.value.push(user)
+  },
 })
 
 const name = ref('')

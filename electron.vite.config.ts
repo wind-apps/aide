@@ -7,7 +7,11 @@ import { PrimeVueResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [
+      externalizeDepsPlugin({
+        exclude: ['emittery'],
+      }),
+    ],
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
@@ -21,11 +25,12 @@ export default defineConfig({
     plugins: [
       Vue(),
       AutoImport({
-        dts: './src/auto-imports.d.ts',
-        imports: ['vue'],
+        dts: 'src/auto-imports.d.ts',
+        imports: ['vue', 'vue-router'],
       }),
       Components({
-        dts: './src/components.d.ts',
+        dts: 'src/components.d.ts',
+        dirs: ['src/components'],
         resolvers: [
           PrimeVueResolver({
             importIcons: true,

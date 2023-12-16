@@ -1,6 +1,6 @@
 import { observable } from '@trpc/server/observable'
 import { type } from 'arktype'
-import Emittery from 'emittery';
+import Emittery from 'emittery'
 import type { ItemsRecord } from '../db/generated'
 import xata from '../db/xata'
 import { publicProcedure, router } from './trpc'
