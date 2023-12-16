@@ -6,6 +6,8 @@ import Components from 'unplugin-vue-components/vite'
 import { PrimeVueResolver } from 'unplugin-vue-components/resolvers'
 import VueRouter from 'unplugin-vue-router/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
+import WindiCSS from 'vite-plugin-windicss'
+
 
 
 const rendererRoot = path.resolve('src/renderer')
@@ -25,9 +27,14 @@ export default defineConfig({
     resolve: {
       alias: {
         '@renderer': path.resolve('src/renderer/src'),
+        '@': path.resolve('src/renderer/src'),
       },
     },
     plugins: [
+      WindiCSS({
+        root: rendererRoot,
+        config: path.resolve('./windi.config.ts')
+      }),
       Vue(),
       VueRouter({
         dts: 'src/routes.d.ts',
