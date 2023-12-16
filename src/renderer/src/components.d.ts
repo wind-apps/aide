@@ -46,6 +46,7 @@ declare module 'vue' {
     PChips: typeof import('primevue/chips')['default']
     PInputText: typeof import('primevue/inputtext')['default']
     PLink: typeof import('./components/PLink.vue')['default']
+    RestorePlugin: typeof import('./components/Editor/RestorePlugin.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ToolbarPlugin: typeof import('./components/Editor/ToolbarPlugin.vue')['default']

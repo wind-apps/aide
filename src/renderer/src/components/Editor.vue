@@ -54,6 +54,7 @@
           <LexicalOnChangePlugin
             @change="onChange"
           />
+          <RestorePlugin :content="intialContent" />
         </div>
       </div>
     </LexicalComposer>
@@ -70,16 +71,17 @@ import {
   LexicalListPlugin,
   LexicalMarkdownShortcutPlugin,
   LexicalOnChangePlugin,
-  LexicalRichTextPlugin,
-  useEditor
+  LexicalRichTextPlugin
+
 } from 'lexical-vue'
 import { HeadingNode, QuoteNode } from '@lexical/rich-text'
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
 import { ListItemNode, ListNode } from '@lexical/list'
 import { CodeHighlightNode, CodeNode } from '@lexical/code'
 import { AutoLinkNode, LinkNode } from '@lexical/link'
-import { $getRoot, type CreateEditorArgs, type EditorState, createEditor } from 'lexical'
+import { $getRoot, type CreateEditorArgs, type EditorState } from 'lexical'
 
+import RestorePlugin from './Editor/RestorePlugin.vue'
 import AutoLinkPlugin from './Editor/AutoLinkPlugin.vue'
 import CodeHighlightPlugin from './Editor/CodeHighlightPlugin.vue'
 import ToolbarPlugin from './Editor/ToolbarPlugin.vue'
@@ -94,11 +96,10 @@ interface Emits {
 }
 
 interface Props {
-  content?: any
+  intialContent?: any
 }
 
-const props = defineProps<Props>()
-
+defineProps<Props>()
 const emits = defineEmits<Emits>()
 
 const editor = ref()
