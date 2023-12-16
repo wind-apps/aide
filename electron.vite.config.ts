@@ -1,9 +1,14 @@
-import { resolve } from 'node:path'
+import path from 'node:path'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import Vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { PrimeVueResolver } from 'unplugin-vue-components/resolvers'
+import VueRouter from 'unplugin-vue-router/vite'
+import { VueRouterAutoImports } from 'unplugin-vue-router'
+
+
+const rendererRoot = path.resolve('src/renderer')
 
 export default defineConfig({
   main: {
@@ -19,14 +24,20 @@ export default defineConfig({
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src'),
+        '@renderer': path.resolve('src/renderer/src'),
       },
     },
     plugins: [
       Vue(),
+      VueRouter({
+        dts: 'src/routes.d.ts',
+        root: rendererRoot,
+        routesFolder: 'src/pages',
+        importMode: 'sync'
+      }),
       AutoImport({
         dts: 'src/auto-imports.d.ts',
-        imports: ['vue', 'vue-router'],
+        imports: ['vue', VueRouterAutoImports],
       }),
       Components({
         dts: 'src/components.d.ts',
