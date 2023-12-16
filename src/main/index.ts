@@ -1,9 +1,10 @@
+import path from 'node:path'
+import process from 'node:process'
+import { BrowserWindow, app, shell } from 'electron'
+import { createIPCHandler } from 'electron-trpc/main'
+import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { app, shell, BrowserWindow } from 'electron'
-import { appRouter } from './api/router';
-import { createIPCHandler } from 'electron-trpc/main';
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import { join } from 'path'
+import { appRouter } from './api/router'
 
 function createWindow(): void {
   // Create the browser window.
@@ -14,9 +15,9 @@ function createWindow(): void {
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false,
-    }
+    },
   })
 
   createIPCHandler({ router: appRouter, windows: [mainWindow] })
@@ -32,11 +33,10 @@ function createWindow(): void {
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
-  }
+  if (is.dev && process.env.ELECTRON_RENDERER_URL)
+    mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
+  else
+    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
 
   // TODO: Update to use a build flag
   mainWindow.webContents.openDevTools()
@@ -58,10 +58,11 @@ app.whenReady().then(() => {
 
   createWindow()
 
-  app.on('activate', function () {
+  app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0)
+      createWindow()
   })
 })
 
@@ -69,9 +70,8 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (process.platform !== 'darwin')
     app.quit()
-  }
 })
 
 // In this file you can include the rest of your app"s specific main process

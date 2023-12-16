@@ -1,12 +1,11 @@
-import { publicProcedure, router } from './trpc';
-import {type} from 'arktype'
-import { observable } from '@trpc/server/observable';
 import EventEmitter from 'node:events'
-
+import { type } from 'arktype'
+import { observable } from '@trpc/server/observable'
+import { publicProcedure, router } from './trpc'
 
 const user = type({
   id: 'number',
-  name: 'string'
+  name: 'string',
 })
 
 type User = typeof user.infer
@@ -14,56 +13,55 @@ type User = typeof user.infer
 const users: User[] = [
   {
     id: 1,
-    name: 'Travis'
+    name: 'Travis',
   },
   {
     id: 2,
-    name: 'James'
+    name: 'James',
   },
   {
     id: 3,
-    name: 'Jessa'
+    name: 'Jessa',
   },
-];
+]
 
-const ee = new EventEmitter();
+const ee = new EventEmitter()
 
 export const appRouter = router({
   userList: publicProcedure
     .query(async () => {
       // Retrieve users from a datasource, this is an imaginary database
 
-
-      return users;
+      return users
     }),
   userById: publicProcedure
-  .input(type({ id: 'number' }).assert)
-  .query(({ input }) => {
-    return users.find(user => user.id === input.id)
-  }),
+    .input(type({ id: 'number' }).assert)
+    .query(({ input }) => {
+      return users.find(user => user.id === input.id)
+    }),
   userCreate: publicProcedure
-  .input(user.assert)
-  .mutation(({ input }) => {
-    users.push(input)
-    console.log('emitting event')
-    ee.emit('add', input);
-    return input
-  }),
+    .input(user.assert)
+    .mutation(({ input }) => {
+      users.push(input)
+      console.log('emitting event')
+      ee.emit('add', input)
+      return input
+    }),
   userSub: publicProcedure.subscription(() => {
     return observable<User>((emit) => {
       const onAdd = (data: User) => {
         console.log('recieved event', data)
         // emit data to client
-        emit.next(data);
-      };
+        emit.next(data)
+      }
       // trigger `onAdd()` when `add` is triggered in our event emitter
-      ee.on('add', onAdd);
+      ee.on('add', onAdd)
       // unsubscribe function when client disconnects or stops subscribing
       return () => {
-        ee.off('add', onAdd);
-      };
-    });
-  })
-});
+        ee.off('add', onAdd)
+      }
+    })
+  }),
+})
 
-export type AppRouter = typeof appRouter;
+export type AppRouter = typeof appRouter
