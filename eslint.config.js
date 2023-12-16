@@ -9,5 +9,13 @@ module.exports = antfu({
   ],
   rules: {
     'no-console': 'off',
+    'vue/max-attributes-per-line': ['error', {
+      singleline: {
+        max: 1,
+      },
+      multiline: {
+        max: 1,
+      },
+    }],
   },
 })
