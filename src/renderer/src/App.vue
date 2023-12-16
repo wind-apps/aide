@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import Versions from './components/Versions.vue'
 import TRPC from './components/TRPC.vue';
 </script>
 
 <template>
-  <Versions />
-
   <svg
     class="hero-logo"
     viewBox="0 0 900 300"
@@ -25,4 +22,3 @@ import TRPC from './components/TRPC.vue';
     <TRPC />
   </Suspense>
 </template>
-

@@ -15,7 +15,7 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
     }
   })
 
@@ -37,6 +37,9 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  // TODO: Update to use a build flag
+  mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
