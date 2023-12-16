@@ -102,6 +102,10 @@ interface Props {
 defineProps<Props>()
 const emits = defineEmits<Emits>()
 
+// TODO: WOW this is a _horrific_ mess. The v-model on the content change plugin doesn't seem to work, so I need to handle this better myself.
+// We can create our own plugin to watch data, and v-model to parent with flattened changes?
+// We could also use debounce, as long as it will have emitted before we click save.
+
 const editor = ref()
 watch(editor, editor => {
   console.log({ editor })
