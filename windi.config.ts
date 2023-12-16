@@ -1,10 +1,15 @@
 import { defineConfig } from 'windicss/helpers'
+import scrollbar from '@windicss/plugin-scrollbar'
 
 export default defineConfig({
   attributify: true,
-  preflight: false,
-  plugins: [],
+  plugins: [
+    scrollbar,
+  ],
   theme: {
     extend: {},
+  },
+  variants: {
+    scrollbar: ['rounded'],
   },
 })

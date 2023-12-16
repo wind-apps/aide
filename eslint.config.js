@@ -17,5 +17,8 @@ module.exports = antfu({
         max: 1,
       },
     }],
+    'vue/block-order': ['error', {
+      order: [['template', 'script'], 'style'],
+    }],
   },
 })

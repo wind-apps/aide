@@ -7,11 +7,21 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AutoLinkPlugin: typeof import('./components/Editor/AutoLinkPlugin.vue')['default']
+    BlockOptionsDropdownList: typeof import('./components/Editor/BlockOptionsDropdownList.vue')['default']
+    CodeHighlightPlugin: typeof import('./components/Editor/CodeHighlightPlugin.vue')['default']
+    CodeLanguageSelect: typeof import('./components/Editor/CodeLanguageSelect.vue')['default']
+    Editor: typeof import('./components/Editor.vue')['default']
+    FloatingLinkEditor: typeof import('./components/Editor/FloatingLinkEditor.vue')['default']
+    ListMaxIndentLevelPlugin: typeof import('./components/Editor/ListMaxIndentLevelPlugin.vue')['default']
+    MarkdownShortcutPlugin: typeof import('./components/Editor/MarkdownShortcutPlugin.vue')['default']
     PButton: typeof import('primevue/button')['default']
+    PChips: typeof import('primevue/chips')['default']
     PInputText: typeof import('primevue/inputtext')['default']
     PLink: typeof import('./components/PLink.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ToolbarPlugin: typeof import('./components/Editor/ToolbarPlugin.vue')['default']
     TRPC: typeof import('./components/TRPC.vue')['default']
     Versions: typeof import('./components/Versions.vue')['default']
   }
