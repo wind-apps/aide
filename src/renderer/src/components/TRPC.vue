@@ -15,20 +15,21 @@ const trpc = createTRPCProxyClient<AppRouter>({
   links: [ipcLink()],
 })
 
-const initial = await trpc.userList.query()
+const initial = await trpc.itemsList.query()
 
-const users = ref(initial)
+const items = ref(initial)
 
-trpc.userSub.subscribe(undefined, { onData: (user) => {
+trpc.itemSub.subscribe(undefined, {
+  onData: (user) => {
   console.log('got data!', user)
-  users.value.push(user)
-} })
+  items.value.push(user)
+}
+})
 
 const name = ref('')
 async function addUser() {
-  const res = await trpc.userCreate.mutate({
-    id: Math.round(Math.random() * 100),
-    name: name.value,
+  const res = await trpc.itemCreate.mutate({
+    title: name.value,
   })
 
   console.log(res)
@@ -56,10 +57,10 @@ function changeTheme() {
     <br>
     <ul>
       <li
-        v-for="user in users"
-        :key="user.id"
+        v-for="item in items"
+        :key="item.id"
       >
-        {{ user.name }}
+        {{ item.title }}
       </li>
     </ul>
   </div>

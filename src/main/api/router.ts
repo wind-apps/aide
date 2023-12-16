@@ -1,64 +1,47 @@
-import EventEmitter from 'node:events'
-import { type } from 'arktype'
 import { observable } from '@trpc/server/observable'
+import { type } from 'arktype'
+import Emittery from 'emittery';
+import type { ItemsRecord } from '../db/generated'
+import xata from '../db/xata'
 import { publicProcedure, router } from './trpc'
 
-const user = type({
-  id: 'number',
-  name: 'string',
+const item = type({
+  title: 'string',
 })
 
-type User = typeof user.infer
+interface Events {
+  'create': ItemsRecord
+}
 
-const users: User[] = [
-  {
-    id: 1,
-    name: 'Travis',
-  },
-  {
-    id: 2,
-    name: 'James',
-  },
-  {
-    id: 3,
-    name: 'Jessa',
-  },
-]
-
-const ee = new EventEmitter()
+const ee = new Emittery<Events>()
 
 export const appRouter = router({
-  userList: publicProcedure
+  itemsList: publicProcedure
     .query(async () => {
-      // Retrieve users from a datasource, this is an imaginary database
+      const items = await xata.db.items.getAll()
 
-      return users
+      return items
     }),
-  userById: publicProcedure
-    .input(type({ id: 'number' }).assert)
-    .query(({ input }) => {
-      return users.find(user => user.id === input.id)
+  itemById: publicProcedure
+    .input(type({ id: 'string' }).assert)
+    .query(async ({ input }) => {
+      return await xata.db.items.getFirst({ filter: { id: { $is: input.id } } })
     }),
-  userCreate: publicProcedure
-    .input(user.assert)
-    .mutation(({ input }) => {
-      users.push(input)
-      console.log('emitting event')
-      ee.emit('add', input)
-      return input
+  itemCreate: publicProcedure
+    .input(item.assert)
+    .mutation(async ({ input }) => {
+      const item = await xata.db.items.create(input)
+      ee.emit('create', item)
+      return item
     }),
-  userSub: publicProcedure.subscription(() => {
-    return observable<User>((emit) => {
-      const onAdd = (data: User) => {
-        console.log('recieved event', data)
-        // emit data to client
-        emit.next(data)
-      }
-      // trigger `onAdd()` when `add` is triggered in our event emitter
-      ee.on('add', onAdd)
-      // unsubscribe function when client disconnects or stops subscribing
+  itemSub: publicProcedure.subscription(() => {
+    return observable<ItemsRecord>((emit) => {
+      const onCreate = (data: ItemsRecord) => emit.next(data)
+
+      ee.on('create', onCreate)
+
       return () => {
-        ee.off('add', onAdd)
+        ee.off('create', onCreate)
       }
     })
   }),

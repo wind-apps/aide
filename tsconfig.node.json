@@ -3,14 +3,14 @@
   "compilerOptions": {
     "composite": true,
     "types": [
-      "electron-vite/node"
-    ]
+      "electron-vite/node",
+      "./env.d.ts"
+    ],
+    "skipLibCheck": false
   },
   "include": [
     "electron.vite.config.*",
-    "src/main/*",
-    "src/preload/*",
-    "src/main/api/router.ts",
-    "src/main/api/trpc.ts"
+    "src/main/**/*",
+    "src/preload/*"
   ]
 }

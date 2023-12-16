@@ -5,6 +5,7 @@ module.exports = antfu({
     'out/*',
     'dist/*',
     'node_modules/*',
+    'src/main/db/generated.ts'
   ],
   rules: {
     'no-console': 'off',

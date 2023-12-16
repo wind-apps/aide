@@ -17,6 +17,9 @@ dependencies:
   '@trpc/server':
     specifier: ^10.44.1
     version: 10.44.1
+  '@xata.io/client':
+    specifier: ^0.28.1
+    version: 0.28.1(typescript@5.3.3)
   arktype:
     specifier: 1.0.28-alpha
     version: 1.0.28-alpha
@@ -26,6 +29,9 @@ dependencies:
   electron-updater:
     specifier: ^6.1.7
     version: 6.1.7
+  emittery:
+    specifier: ^1.0.1
+    version: 1.0.1
   primeicons:
     specifier: ^6.0.1
     version: 6.0.1
@@ -1307,6 +1313,14 @@ packages:
   /@vue/shared@3.3.12:
     resolution: {integrity: sha512-6p0Yin0pclvnER7BLNOQuod9Z+cxSYh8pSh7CzHnWNjAIP6zrTlCdHRvSCb1aYEx6i3Q3kvfuWU7nG16CgG1ag==}
 
+  /@xata.io/client@0.28.1(typescript@5.3.3):
+    resolution: {integrity: sha512-4MIU6jU7/owgn55LhiURAG3dz29Vx0gFrUWyhjc+ETa3NFHQ9Ilwu/qZF0uOwZS/yFZZSHVrkL2n/4q73l/zNg==}
+    peerDependencies:
+      typescript: '>=4.5'
+    dependencies:
+      typescript: 5.3.3
+    dev: false
+
   /@xmldom/xmldom@0.8.10:
     resolution: {integrity: sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==}
     engines: {node: '>=10.0.0'}
@@ -2059,6 +2073,11 @@ packages:
       extract-zip: 2.0.1
     transitivePeerDependencies:
       - supports-color
+
+  /emittery@1.0.1:
+    resolution: {integrity: sha512-2ID6FdrMD9KDLldGesP6317G78K7km/kMcwItRtVFva7I/cSEOIaLpewaUb+YLXVwdAp3Ctfxh/V5zIl1sj7dQ==}
+    engines: {node: '>=14.16'}
+    dev: false
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}

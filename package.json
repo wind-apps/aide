@@ -26,9 +26,11 @@
     "@electron-toolkit/utils": "^2.0.1",
     "@trpc/client": "^10.44.1",
     "@trpc/server": "^10.44.1",
+    "@xata.io/client": "^0.28.1",
     "arktype": "1.0.28-alpha",
     "electron-trpc": "^0.5.2",
     "electron-updater": "^6.1.7",
+    "emittery": "^1.0.1",
     "primeicons": "^6.0.1",
     "primevue": "^3.44.0"
   },

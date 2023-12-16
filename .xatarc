@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://Demos-t13ff3.eu-west-1.xata.sh/db/aide-app",
+  "codegen": {
+    "output": "src/main/db/generated.ts"
+  }
+}
