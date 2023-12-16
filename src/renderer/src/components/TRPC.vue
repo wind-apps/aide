@@ -41,13 +41,26 @@ function changeTheme() {
 
 <template>
   <div>
-    <p-button @click="changeTheme">Change Theme</p-button>
+    <p-button @click="changeTheme">
+      Change Theme
+    </p-button>
     <br>
-    <p-input-text type="text" v-model="name" placeholder="name" />
-    <p-button @click="addUser">Add User</p-button>
+    <p-input-text
+      v-model="name"
+      type="text"
+      placeholder="name"
+    />
+    <p-button @click="addUser">
+      Add User
+    </p-button>
     <br>
     <ul>
-      <li v-for="user in users" :key="user.id">{{  user.name }}</li>
+      <li
+        v-for="user in users"
+        :key="user.id"
+      >
+        {{ user.name }}
+      </li>
     </ul>
   </div>
 </template>
