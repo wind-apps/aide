@@ -8,8 +8,6 @@ import VueRouter from 'unplugin-vue-router/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
 import WindiCSS from 'vite-plugin-windicss'
 
-
-
 const rendererRoot = path.resolve('src/renderer')
 
 export default defineConfig({
@@ -33,14 +31,14 @@ export default defineConfig({
     plugins: [
       WindiCSS({
         root: rendererRoot,
-        config: path.resolve('./windi.config.ts')
+        config: path.resolve('./windi.config.ts'),
       }),
       Vue(),
       VueRouter({
         dts: 'src/routes.d.ts',
         root: rendererRoot,
         routesFolder: 'src/pages',
-        importMode: 'sync'
+        importMode: 'sync',
       }),
       AutoImport({
         dts: 'src/auto-imports.d.ts',

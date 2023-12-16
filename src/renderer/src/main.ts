@@ -5,7 +5,6 @@ import { router } from './router'
 
 import 'virtual:windi.css'
 
-
 // TODO: If we want to switch themes, we need to have all themes already imported.
 import 'primevue/resources/themes/lara-light-purple/theme.css'
 

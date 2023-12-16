@@ -1,6 +1,10 @@
 <template>
   <div
-  container="~" border="1 solid red-400" m="x-auto" text="center">
+    container="~"
+    border="1 solid red-400"
+    m="x-auto"
+    text="center"
+  >
     <div>Title</div>
     <div>Tags</div>
     <div>
