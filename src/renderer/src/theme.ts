@@ -7,4 +7,7 @@ export default <GlobalThemeOverrides>{
   Menu: {
     itemTextColorChildActiveHorizontal: 'initial',
   },
+  PageHeader: {
+    titleFontSize: '1.8rem'
+  }
 }

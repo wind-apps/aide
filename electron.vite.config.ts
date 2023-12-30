@@ -1,12 +1,13 @@
 import path from 'node:path'
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
-import Vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
+import FluentPlugin from 'rollup-plugin-fluent-vue'
+import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
-import { VueRouterAutoImports } from 'unplugin-vue-router'
 import WindiCSS from 'vite-plugin-windicss'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import { VueRouterAutoImports } from 'unplugin-vue-router'
+import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 
 const mainRoot = path.resolve('src/main')
 const rendererRoot = path.resolve('src/renderer')
@@ -44,6 +45,7 @@ export default defineConfig({
         config: path.resolve('./windi.config.ts'),
       }),
       Vue(),
+      FluentPlugin(),
       VueRouter({
         dts: path.join(rendererRoot, 'src/routes.d.ts'),
         root: rendererRoot,
@@ -64,6 +66,7 @@ export default defineConfig({
               'useNotification',
               'useLoadingBar',
             ],
+            'fluent-vue': ['useFluent'],
           },
         ],
       }),

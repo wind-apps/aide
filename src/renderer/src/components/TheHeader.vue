@@ -4,6 +4,10 @@
     flex="~ row"
     justify="between"
     w="full"
+    pos="sticky top-0"
+    m="b-8"
+    bg="white"
+    z="50"
   >
     <n-menu
       v-model:value="activeOption"
