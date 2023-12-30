@@ -5,15 +5,12 @@
     "baseUrl": ".",
     "paths": {
       "@renderer/*": [
-        "src/renderer/src/*"
+        "./src/renderer/src/*"
       ],
-      "@": [
-        "src/renderer/src/*"
+      "@main/*": [
+        "./src/main/*"
       ]
-    },
-    "strict": true,
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true
+    }
   },
   "include": [
     "src/renderer/src/env.d.ts",

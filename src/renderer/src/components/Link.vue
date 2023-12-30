@@ -15,6 +15,9 @@ function navigate() {
 
 <template>
   <NButton @click="navigate">
+    <template #icon>
+      <slot name="icon" />
+    </template>
     <slot />
   </NButton>
 </template>

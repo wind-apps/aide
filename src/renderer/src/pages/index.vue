@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const trpc = useTRPC()
+
 </script>
 
 <template>

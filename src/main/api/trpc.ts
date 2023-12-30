@@ -1,11 +1,19 @@
 import { initTRPC } from '@trpc/server'
 import { errors } from '@vinejs/vine'
+import xata from '@main/db/xata'
+
+export async function createContext() {
+  // TODO: Adding Xata here, as later we will want to pass in our own API key
+  return {
+    xata
+  }
+}
 
 /**
  * Initialization of tRPC backend
  * Should be done only once per backend!
  */
-const t = initTRPC.create({
+const t = initTRPC.context<typeof createContext>().create({
   errorFormatter: ({shape, error}) => {
     return {
       ...shape,

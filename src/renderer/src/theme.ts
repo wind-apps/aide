@@ -4,4 +4,7 @@ export default <GlobalThemeOverrides>{
   common: {
     fontFamily: 'Lexend, sans',
   },
+  Menu: {
+    itemTextColorChildActiveHorizontal: 'initial',
+  },
 }

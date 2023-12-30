@@ -4,6 +4,7 @@ import { BrowserWindow, app, shell } from 'electron'
 import { createIPCHandler } from 'electron-trpc/main'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { createContext } from './api/trpc'
 import { appRouter } from './api/router'
 
 function createWindow(): void {
@@ -20,7 +21,11 @@ function createWindow(): void {
     },
   })
 
-  createIPCHandler({ router: appRouter, windows: [mainWindow] })
+  createIPCHandler({
+    createContext,
+    router: appRouter,
+    windows: [mainWindow],
+  })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -33,10 +38,8 @@ function createWindow(): void {
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env.ELECTRON_RENDERER_URL)
-    mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
-  else
-    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
+  if (is.dev && process.env.ELECTRON_RENDERER_URL) { mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL) }
+  else { mainWindow.loadFile(path.join(__dirname, '../renderer/index.html')) }
 
   // TODO: Update to use a build flag
   mainWindow.webContents.openDevTools()
@@ -61,8 +64,7 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0)
-      createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) { createWindow() }
   })
 })
 
@@ -70,8 +72,7 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin')
-    app.quit()
+  if (process.platform !== 'darwin') { app.quit() }
 })
 
 // In this file you can include the rest of your app"s specific main process

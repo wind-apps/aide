@@ -2,6 +2,9 @@
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
   "compilerOptions": {
     "composite": true,
+    "paths": {
+      "@main/*": ["./src/main/*"]
+    },
     "types": [
       "electron-vite/node",
       "./env.d.ts"

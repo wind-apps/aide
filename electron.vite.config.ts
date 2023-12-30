@@ -8,10 +8,19 @@ import { VueRouterAutoImports } from 'unplugin-vue-router'
 import WindiCSS from 'vite-plugin-windicss'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
+const mainRoot = path.resolve('src/main')
 const rendererRoot = path.resolve('src/renderer')
+
+const aliases = {
+  '@main': mainRoot,
+  '@renderer': path.join(rendererRoot, 'src'),
+}
 
 export default defineConfig({
   main: {
+    resolve: {
+      alias: aliases,
+    },
     plugins: [
       externalizeDepsPlugin({
         // Exclude plugins that are already ESM
@@ -20,14 +29,14 @@ export default defineConfig({
     ],
   },
   preload: {
+    resolve: {
+      alias: aliases,
+    },
     plugins: [externalizeDepsPlugin()],
   },
   renderer: {
     resolve: {
-      alias: {
-        '@renderer': path.resolve('src/renderer/src'),
-        '@': path.resolve('src/renderer/src'),
-      },
+      alias: aliases,
     },
     plugins: [
       WindiCSS({
@@ -36,14 +45,14 @@ export default defineConfig({
       }),
       Vue(),
       VueRouter({
-        dts: 'src/routes.d.ts',
+        dts: path.join(rendererRoot, 'src/routes.d.ts'),
         root: rendererRoot,
-        routesFolder: 'src/pages',
+        routesFolder: path.join(rendererRoot, 'src/pages'),
         importMode: 'sync',
       }),
       AutoImport({
-        dts: 'src/auto-imports.d.ts',
-        dirs: ['src/composables'],
+        dts: path.join(rendererRoot, 'src/auto-imports.d.ts'),
+        dirs: [path.join(rendererRoot, 'src/composables')],
         imports: [
           'vue',
           '@vueuse/core',
@@ -59,8 +68,8 @@ export default defineConfig({
         ],
       }),
       Components({
-        dts: 'src/components.d.ts',
-        dirs: ['src/components'],
+        dts: path.join(rendererRoot, 'src/components.d.ts'),
+        dirs: [path.join(rendererRoot, 'src/components')],
         resolvers: [
           NaiveUiResolver(),
           // @ts-expect-error can ignore this!
