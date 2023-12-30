@@ -96,14 +96,14 @@
           </template>
         </n-dynamic-tags>
       </div>
-      <Editor ref="editor" />
+      <Editor v-model="content" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { klona } from 'klona'
-import type { SaveContent } from '@renderer/components/Editor.vue'
+import type { SaveContent } from '@renderer/components/Editor/types'
 
 const title = ref('')
 
@@ -122,7 +122,7 @@ function mountedInput() {
   tagInputEl.value?.focus()
 }
 
-const editor = ref<{ save: () => SaveContent }>()
+const content = ref<SaveContent>()
 
 const trpc = useTRPC()
 
@@ -134,14 +134,15 @@ function validationStatus(field: string) {
 
 async function save() {
   try {
-    const content = editor.value?.save()
-    if (!content) { return }
+    if (!content.value) {
+      return
+    }
 
     await trpc.itemCreate.mutate(klona({
       title: toValue(title),
       tags: toValue(tags),
-      content: content.json,
-      textContent: content.text,
+      content: content.value.json,
+      textContent: content.value.text,
     }))
   }
   catch (err) {

@@ -6,8 +6,14 @@
     "paths": {
       "@renderer/*": [
         "src/renderer/src/*"
+      ],
+      "@": [
+        "src/renderer/src/*"
       ]
-    }
+    },
+    "strict": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true
   },
   "include": [
     "src/renderer/src/env.d.ts",

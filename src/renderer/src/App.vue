@@ -1,6 +1,6 @@
 <template>
   <Suspense>
-    <n-config-provider :theme="darkTheme">
+    <n-config-provider :theme="lightTheme">
       <router-view />
       <n-global-style />
     </n-config-provider>
@@ -8,5 +8,5 @@
 </template>
 
 <script lang="ts" setup>
-import { darkTheme } from 'naive-ui'
+import { lightTheme } from 'naive-ui'
 </script>
