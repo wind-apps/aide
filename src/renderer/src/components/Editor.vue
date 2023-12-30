@@ -1,165 +1,141 @@
 <template>
-  <div
-    border="1 solid $surface-300"
-    pos="relative"
-    style="border-radius: var(--border-radius);"
-    overflow="hidden"
-    text="$text-color"
-  >
-    <LexicalComposer
-      :initial-config="config"
-      @error="onError"
-    >
-      <div
-        class="editor-container"
-        h="full"
-        flex="~ col"
-      >
-        <ToolbarPlugin flex="shrink-0 grow-0" />
-        <div
-          className="editor-inner"
-          flex="grow"
-          pos="relative"
-          m="4"
-          overflow="auto"
-          scrollbar="~ thin thumb-rounded-md thumb-gray-400 track-gray-100"
-          overscroll="auto"
-        >
-          <LexicalRichTextPlugin >
-            <template #contentEditable>
-              <LexicalContentEditable
-      ref="editor"
-                class="editor-input"
-                outline="none"
-                h="full"
-                p="r-4"
-              />
-            </template>
-            <template #placeholder>
-              <div
-                class="editor-placeholder"
-                pos="absolute top-0 left-0"
-              >
-                Enter some text...
-              </div>
-            </template>
-          </LexicalRichTextPlugin>
-          <LexicalHistoryPlugin />
-          <LexicalAutoFocusPlugin />
-          <CodeHighlightPlugin />
-          <LexicalListPlugin />
-          <LexicalLinkPlugin />
-          <AutoLinkPlugin />
-          <LexicalMarkdownShortcutPlugin />
-          <LexicalOnChangePlugin
-            @change="onChange"
-          />
-          <RestorePlugin :content="intialContent" />
-        </div>
-      </div>
-    </LexicalComposer>
-  </div>
+  <EditorContent :editor="editor" />
 </template>
 
 <script lang="ts" setup>
-import {
-  LexicalAutoFocusPlugin,
-  LexicalComposer,
-  LexicalContentEditable,
-  LexicalHistoryPlugin,
-  LexicalLinkPlugin,
-  LexicalListPlugin,
-  LexicalMarkdownShortcutPlugin,
-  LexicalOnChangePlugin,
-  LexicalRichTextPlugin
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import StarterKit from '@tiptap/starter-kit'
+import type { JSONContent } from '@tiptap/vue-3'
+import { EditorContent, VueNodeViewRenderer, useEditor } from '@tiptap/vue-3'
+import { common, createLowlight } from 'lowlight'
+import CodeBlockComponent from './Editor/CodeBlockComponent.vue'
+import type { SaveContent } from './Editor/types'
 
-} from 'lexical-vue'
-import { HeadingNode, QuoteNode } from '@lexical/rich-text'
-import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
-import { ListItemNode, ListNode } from '@lexical/list'
-import { CodeHighlightNode, CodeNode } from '@lexical/code'
-import { AutoLinkNode, LinkNode } from '@lexical/link'
-import { $getRoot, type CreateEditorArgs, type EditorState } from 'lexical'
+const props = defineProps<Props>()
 
-import RestorePlugin from './Editor/RestorePlugin.vue'
-import AutoLinkPlugin from './Editor/AutoLinkPlugin.vue'
-import CodeHighlightPlugin from './Editor/CodeHighlightPlugin.vue'
-import ToolbarPlugin from './Editor/ToolbarPlugin.vue'
+const emits = defineEmits<Emits>()
 
-export interface SaveContent {
-  json: any
-  text: string
+const lowlight = createLowlight(common)
+
+CodeBlockLowlight.configure({
+  lowlight,
+})
+
+interface Props {
+  value?: JSONContent | null
 }
 
 interface Emits {
-  (name: 'update:content', value: SaveContent): void
+  (name: 'update:value', value: SaveContent): void
 }
 
-interface Props {
-  intialContent?: any
-}
-
-defineProps<Props>()
-const emits = defineEmits<Emits>()
-
-// TODO: WOW this is a _horrific_ mess. The v-model on the content change plugin doesn't seem to work, so I need to handle this better myself.
-// We can create our own plugin to watch data, and v-model to parent with flattened changes?
-// We could also use debounce, as long as it will have emitted before we click save.
-
-const editor = ref()
-watch(editor, editor => {
-  console.log({ editor })
-})
-const config: CreateEditorArgs = {
-  editable: true,
-  editorState: undefined,
-  theme: {
-    // Theme styling goes here
+const editor = useEditor({
+  content: props.value,
+  onUpdate: ({ editor }) => {
+    emits('update:value', {
+      json: editor.getJSON(),
+      text: editor.getText(),
+    })
   },
-  nodes: [
-    HeadingNode,
-    ListNode,
-    ListItemNode,
-    QuoteNode,
-    CodeNode,
-    CodeHighlightNode,
-    TableNode,
-    TableCellNode,
-    TableRowNode,
-    AutoLinkNode,
-    LinkNode,
+  extensions: [
+    StarterKit,
+    CodeBlockLowlight
+      .extend({
+        addNodeView: () => VueNodeViewRenderer(CodeBlockComponent),
+      })
+      .configure({ lowlight }),
   ],
-}
+})
+</script>
 
-function onError(error: Error) {
-  console.error(error)
-  throw error
-}
+<style lang="scss">
+/* Basic editor styles */
+.tiptap {
+  @apply h-full;
+  @apply p-4;
+  @apply border-1 border-solid border-gray-300 rounded-sm;
+  @apply focus:outline-none;
 
-const content = ref<EditorState>()
+  >*+* {
+    margin-top: 0.75em;
+  }
 
-const onChange = useDebounceFn((state: EditorState) => {
-  content.value = state
-  emits('update:content', {
-    json: state.toJSON(),
-    text: state.read(() => $getRoot().getTextContent()),
-  })
-}, 1000)
+  ul {
+    list-style: disc;
+  }
 
-function save(): SaveContent {
-  console.log('content', content.value)
-  if (!content.value) {
-    return {
-      json: {},
-      text: '',
+  code {
+    @apply font-mono;
+    @apply rounded-md;
+    @apply text-white;
+    @apply bg-dark-400;
+    @apply px-2 py-1;
+  }
+
+  pre {
+    @apply font-mono;
+    @apply rounded-md;
+    @apply text-white;
+    @apply bg-dark-400;
+    @apply p-4;
+
+    code {
+      color: inherit;
+      padding: 0;
+      background: none;
+    }
+
+    .hljs-comment,
+    .hljs-quote {
+      color: #616161;
+    }
+
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-attribute,
+    .hljs-tag,
+    .hljs-name,
+    .hljs-regexp,
+    .hljs-link,
+    .hljs-name,
+    .hljs-selector-id,
+    .hljs-selector-class {
+      color: #F98181;
+    }
+
+    .hljs-number,
+    .hljs-meta,
+    .hljs-built_in,
+    .hljs-builtin-name,
+    .hljs-literal,
+    .hljs-type,
+    .hljs-params {
+      color: #FBBC88;
+    }
+
+    .hljs-string,
+    .hljs-symbol,
+    .hljs-bullet {
+      color: #B9F18D;
+    }
+
+    .hljs-title,
+    .hljs-section {
+      color: #FAF594;
+    }
+
+    .hljs-keyword,
+    .hljs-selector-tag {
+      color: #70CFF8;
+    }
+
+    .hljs-emphasis {
+      font-style: italic;
+    }
+
+    .hljs-strong {
+      font-weight: 700;
     }
   }
-
-  return {
-    json: content.value?.toJSON(),
-    text: content.value?.read(() => $getRoot().getTextContent()),
-  }
 }
-
-defineExpose({ save })
-</script>
+</style>

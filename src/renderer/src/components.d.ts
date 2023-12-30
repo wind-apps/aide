@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AutoLinkPlugin: typeof import('./components/Editor/AutoLinkPlugin.vue')['default']
     BlockOptionsDropdownList: typeof import('./components/Editor/BlockOptionsDropdownList.vue')['default']
+    CodeBlockComponent: typeof import('./components/Editor/CodeBlockComponent.vue')['default']
     CodeHighlightPlugin: typeof import('./components/Editor/CodeHighlightPlugin.vue')['default']
     CodeLanguageSelect: typeof import('./components/Editor/CodeLanguageSelect.vue')['default']
     Editor: typeof import('./components/Editor.vue')['default']
