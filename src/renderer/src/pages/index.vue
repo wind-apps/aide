@@ -83,22 +83,20 @@ const { state, isLoading, execute } = useAsyncState(async (after?: string) => {
 }, undefined, {
   immediate: true,
   onSuccess: (data) => {
-    console.log('got data', data)
     if (data?.items) {
       items.value.push(...data.items)
     }
   },
 })
 
+// Infinite scroll is a bit annoying if we view an item, then go back, then are forced to scroll all the way back down again.
+// TODO: See if we can store the last cursor, and auto scroll to that page, somehow?
+
 const loadMoreEl = ref(null)
 const targetIsVisible = useElementVisibility(loadMoreEl)
 whenever(targetIsVisible, async () => {
-  console.log('load more!')
-  const res = await execute(0, state.value?.pageInfo.cursor)
-  console.log('got res', res)
-
-
-}, {once: false})
+  await execute(0, state.value?.pageInfo.cursor)
+})
 
 function formatDate(value: string | dayjs.Dayjs) {
   return dayjs(value).format('DD MMMM YYYY')
