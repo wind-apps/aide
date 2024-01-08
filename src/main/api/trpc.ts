@@ -1,11 +1,13 @@
 import { initTRPC } from '@trpc/server'
 import { errors } from '@vinejs/vine'
 import xata from '@main/db/xata'
+import { events } from './events'
 
 export async function createContext() {
   // TODO: Adding Xata here, as later we will want to pass in our own API key
   return {
-    xata
+    xata,
+    events,
   }
 }
 
@@ -14,15 +16,15 @@ export async function createContext() {
  * Should be done only once per backend!
  */
 const t = initTRPC.context<typeof createContext>().create({
-  errorFormatter: ({shape, error}) => {
+  errorFormatter: ({ shape, error }) => {
     return {
       ...shape,
       data: {
         ...shape.data,
-        validation: error.cause?.cause instanceof errors.E_VALIDATION_ERROR ? error.cause.cause.messages : error
-      }
+        validation: error.cause?.cause instanceof errors.E_VALIDATION_ERROR ? error.cause.cause.messages : error,
+      },
     }
-  }
+  },
 })
 
 /**

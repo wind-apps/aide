@@ -36,7 +36,16 @@ import { FileSearchIcon, FileTextIcon, TagsIcon } from 'lucide-vue-next'
 import { type MenuOption, NIcon } from 'naive-ui'
 import { RouterLink } from 'vue-router/auto'
 
-const data = await trpc.navigation.header.query()
+const data = await trpc.navigation.recentItems.query()
+
+const recentItems = ref(data ?? [])
+
+// A pretty naive implementation, for now
+trpc.navigation.subscribeRecentItems.subscribe(undefined, {
+  onData: (updatedItems) => {
+    recentItems.value = updatedItems
+  }
+})
 
 const route = useRoute()
 
@@ -55,7 +64,6 @@ function renderIcon(icon: Component) {
 }
 
 const menuOptions = computed<MenuOption[]>(() => {
-  console.log(data)
   const home: MenuOption = {
     key: '/',
     label: () => h(RouterLink, { to: '/' }, { default: () => 'Home' }),
@@ -63,7 +71,7 @@ const menuOptions = computed<MenuOption[]>(() => {
       {
         type: 'group',
         label: 'Recent',
-        children: data.recent.map(item => ({
+        children: recentItems.value.map(item => ({
           key: item.id,
           icon: renderIcon(FileTextIcon),
           label: () => h(RouterLink, { to: { name: '/items/[id]', params: { id: item.id } } }, { default: () => item.title }),

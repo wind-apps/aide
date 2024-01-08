@@ -1,4 +1,6 @@
 import { publicProcedure, router } from '@main/api/trpc'
+import type { XataClient } from '@main/db/generated'
+import { observable } from '@trpc/server/observable'
 
 /**
  * I decided I should try splitting routers up into what part of the UI they relate to,
@@ -8,17 +10,34 @@ import { publicProcedure, router } from '@main/api/trpc'
  * This isn't a public API, I don't need those generic methods, so I think this way works quite well!
  */
 
-export const navigationRouter = router({
-  header: publicProcedure.query(async ({ ctx }) => {
-    const recentItems = await ctx.xata.db.items
+async function getRecentItems(xata: XataClient) {
+  const recentItems = await xata.db.items
     .select(['id', 'title'])
     .getMany({
       pagination: { size: 10 },
       sort: { 'xata.updatedAt': 'desc' },
     })
 
-    return {
-      recent: recentItems,
-    }
+  return recentItems
+}
+
+export const navigationRouter = router({
+  recentItems: publicProcedure.query(async ({ ctx }) => {
+    return await getRecentItems(ctx.xata)
+  }),
+  subscribeRecentItems: publicProcedure.subscription(({ ctx }) => {
+    return observable<Awaited<ReturnType<typeof getRecentItems>>>((emit) => {
+      const onChange = async () => {
+        const recentItems = await getRecentItems(ctx.xata)
+
+        emit.next(recentItems)
+      }
+
+      ctx.events.item.on(['create', 'update', 'delete'], onChange)
+
+      return () => {
+        ctx.events.item.off(['create', 'update', 'delete'], onChange)
+      }
+    })
   }),
 })

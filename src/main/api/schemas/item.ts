@@ -1,9 +1,7 @@
-import { observable } from '@trpc/server/observable'
+import type { ItemsRecord } from '@main/db/generated'
 import type { VineObject } from '@vinejs/vine'
 import vine from '@vinejs/vine'
-import Emittery from 'emittery'
-import type { ItemsRecord } from '@main/db/generated'
-import xata from '@main/db/xata'
+import { observable } from '@trpc/server/observable'
 import { publicProcedure, router } from '@main/api/trpc'
 
 const createInput = vine.object({
@@ -33,70 +31,60 @@ function validateSchema<T extends VineObject>(schema: T) {
   })
 }
 
-interface Events {
-  'create': ItemsRecord
-  'update': ItemsRecord
-  'delete': ItemsRecord
-}
-
-const ee = new Emittery<Events>()
-
 export const itemRouter = router({
   list: publicProcedure
-    .query(async () => {
-      const items = xata.db.items
+    .query(async ({ ctx }) => {
+      const items = ctx.xata.db.items
 
       return items.getPaginated()
     }),
   item: publicProcedure
     .input(validateSchema(vine.object({ id: vine.string() })))
-    .query(async ({ input }) => {
-      return await xata.db.items.getFirst({ filter: { id: { $is: input.id } } })
+    .query(async ({ input, ctx }) => {
+      return await ctx.xata.db.items.getFirst({ filter: { id: { $is: input.id } } })
     }),
   create: publicProcedure
     .input(validateSchema(createInput))
-    .mutation(async ({ input }) => {
-      const item = await xata.db.items.create(input)
-      ee.emit('create', item)
+    .mutation(async ({ input, ctx }) => {
+      const item = await ctx.xata.db.items.create(input)
+      ctx.events.item.emit('create', item)
       return item
     }),
   update: publicProcedure
     .input(validateSchema(updateInput))
-    .mutation(async ({ input }) => {
-      const item = await xata.db.items.update(input)
-      if (item) { ee.emit('update', item) }
+    .mutation(async ({ input, ctx }) => {
+      const item = await ctx.xata.db.items.update(input)
+      if (item) {
+        ctx.events.item.emit('update', item)
+      }
       return item
     }),
   delete: publicProcedure
     .input(validateSchema(deleteInput))
-    .mutation(async ({ input }) => {
-      const item = await xata.db.items.delete(input)
-      if (item) { ee.emit('delete', item) }
+    .mutation(async ({ input, ctx }) => {
+      const item = await ctx.xata.db.items.delete(input)
+      if (item) {
+        ctx.events.item.emit('delete', item)
+      }
       return item
     }),
-  subscribe: publicProcedure.subscription(() => {
+  subscribe: publicProcedure.subscription(({ ctx }) => {
     return observable<ItemsRecord>((emit) => {
-      const onCreate = (data: ItemsRecord) => emit.next(data)
-      const onUpdate = (data: ItemsRecord) => emit.next(data)
-      const onDelete = (data: ItemsRecord) => emit.next(data)
+      const onChange = (data: ItemsRecord) => emit.next(data)
 
-      ee.on('create', onCreate)
-      ee.on('update', onUpdate)
-      ee.on('delete', onDelete)
+      ctx.events.item.on(['create', 'update', 'delete'], onChange)
 
       return () => {
-        ee.off('create', onCreate)
-        ee.off('update', onUpdate)
-        ee.off('delete', onDelete)
+        ctx.events.item.off(['create', 'update', 'delete'], onChange)
       }
     })
   }),
   tags: publicProcedure
     .input(validateSchema(vine.object({ query: vine.string().optional() })))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       if (typeof input.query === 'string') {
         // If we have a query, search for tags with this value
-        const { records } = await xata.search.byTable(input.query, {
+        const { records } = await ctx.xata.search.byTable(input.query, {
           tables: [{ table: 'items', target: [{ column: 'tags' }] }],
           fuzziness: 2,
           prefix: 'phrase',
@@ -109,7 +97,7 @@ export const itemRouter = router({
       }
 
       // If no query, get some recently used tags
-      const items = await xata.db.items.sort('xata.updatedAt', 'desc').select(['tags']).getMany()
+      const items = await ctx.xata.db.items.sort('xata.updatedAt', 'desc').select(['tags']).getMany()
 
       const uniqueTags = new Set(items.flatMap(item => item.tags ?? []))
       return Array.from(uniqueTags)
