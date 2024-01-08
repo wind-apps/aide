@@ -72,7 +72,7 @@ export default defineConfig({
       }),
       Components({
         dts: path.join(rendererRoot, 'src/components.d.ts'),
-        dirs: [path.join(rendererRoot, 'src/components')],
+        dirs: [path.join(rendererRoot, 'src/components'), path.join(rendererRoot, 'src/layouts')],
         resolvers: [
           NaiveUiResolver(),
           // @ts-expect-error can ignore this!

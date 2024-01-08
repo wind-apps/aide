@@ -1,104 +1,49 @@
 <template>
-  <div
-    container="~"
-    m="x-auto"
-    pos="relative"
-    h="screen max-screen"
-    p="y-8"
-  >
-    <div
-      grid="~ cols-1"
-      style="grid-template-rows: auto auto 1fr;"
-      gap="4"
-      m="x-4"
-      w="full"
-      h="full"
-      overflow="hidden"
-    >
-      <div
-        flex="~ row"
-        align="items-center"
-        gap="8"
+  <ItemLayout>
+    <template #title>
+      <n-form-item
+        flex="grow"
+        label="Title"
+        :validation-status="validationStatus('title')"
+        :feedback="validationErrors.title"
       >
-        <n-form-item
-          flex="grow"
-          label="Title"
-          :validation-status="validationStatus('title')"
-          :feedback="validationErrors.title"
-        >
-          <n-input
-            v-model:value="title"
-            size="large"
-            name="title"
-            placeholder="Title"
-            aria-label="Add a title for this item"
-          >
-            <template #prefix>
-              <n-icon>
-                <IconType />
-              </n-icon>
-            </template>
-          </n-input>
-        </n-form-item>
-        <n-button
-          type="primary"
+        <n-input
+          v-model:value="title"
           size="large"
-          flex="grow-0 shrink-0"
-          @click="save"
+          name="title"
+          :placeholder="$t('title-placeholder')"
+          :aria-label="$t('title-aria-label')"
         >
-          Save
-          <template #icon>
-            <NIcon>
-              <IconSave />
-            </NIcon>
+          <template #prefix>
+            <n-icon>
+              <IconType />
+            </n-icon>
           </template>
-        </n-button>
-      </div>
-      <div
-        w="full"
-        flex="~ col"
-        gap="2"
+        </n-input>
+      </n-form-item>
+      <n-button
+        type="primary"
+        size="large"
+        flex="grow-0 shrink-0"
+        :loading="isLoading"
+        :disabled="isLoading"
+        @click="execute()"
       >
-        <n-dynamic-tags
-          v-model:value="tags"
-          size="medium"
-        >
-          <template #input="{ submit, deactivate }">
-            <n-auto-complete
-              ref="tagInputEl"
-              v-model:value="tagInput"
-              :options="options"
-              placeholder="Search for tags"
-              clear-after-select
-              clearable
-              size="small"
-              @select="submit($event)"
-              @keyup.enter="handleEnterTag(submit)"
-              @blur="deactivate"
-              @vue:mounted="mountedInput"
-            />
-          </template>
-          <template #trigger="{ activate, disabled }">
-            <n-button
-              type="primary"
-              dashed
-              size="small"
-              :disabled="disabled"
-              @click="activate()"
-            >
-              <template #icon>
-                <n-icon>
-                  <IconPlus />
-                </n-icon>
-              </template>
-              New Tag
-            </n-button>
-          </template>
-        </n-dynamic-tags>
-      </div>
+        {{ $t('save-button') }}
+        <template #icon>
+          <NIcon>
+            <IconSave />
+          </NIcon>
+        </template>
+      </n-button>
+    </template>
+    <template #tags>
+      <TagsAutoComplete v-model="tags" />
+    </template>
+    <template #editor>
       <Editor v-model="content" />
-    </div>
-  </div>
+    </template>
+  </ItemLayout>
 </template>
 
 <script lang="ts" setup>
@@ -106,25 +51,8 @@ import { klona } from 'klona'
 import type { SaveContent } from '@renderer/components/Editor/types'
 
 const title = ref('')
-
-const tagInput = ref('')
-const initialTags = ['design', 'frontend', 'sdk']
-const options = computed(() => tagInput.value ? initialTags.filter(tag => tag.toLowerCase().includes(tagInput.value.toLowerCase())) : initialTags)
-
 const tags = ref<string[]>([])
-function handleEnterTag(cb: (value: string) => void) {
-  cb(tagInput.value)
-  tagInput.value = ''
-}
-
-const tagInputEl = ref<HTMLElement | null>()
-function mountedInput() {
-  tagInputEl.value?.focus()
-}
-
 const content = ref<SaveContent>()
-
-const trpc = useTRPC()
 
 const validationErrors = ref<Record<string, string>>({})
 
@@ -132,17 +60,17 @@ function validationStatus(field: string) {
   return Reflect.has(validationErrors.value, field) ? 'error' : undefined
 }
 
-async function save() {
-  try {
-    if (!content.value) {
-      return
-    }
+const message = useMessage()
+const router = useRouter()
+const { $t } = useFluent()
 
-    await trpc.itemCreate.mutate(klona({
+const { execute, isLoading } = useAsyncState(async () => {
+  try {
+    return await trpc.item.create.mutate(klona({
       title: toValue(title),
       tags: toValue(tags),
-      content: content.value.json,
-      textContent: content.value.text,
+      content: content.value?.json,
+      textContent: content.value?.text,
     }))
   }
   catch (err) {
@@ -151,9 +79,32 @@ async function save() {
 
     if (error.data?.validation) {
       console.log(error.data.validation)
-      console.log(Object.fromEntries(error.data.validation.map(err => [err.field, err.message])))
       validationErrors.value = Object.fromEntries(error.data.validation.map(err => [err.field, err.message]))
     }
+
+    throw error
   }
-}
+}, undefined, {
+  immediate: false,
+  onError: () => {
+    message.error($t('error-message'), { closable: true })
+  },
+  onSuccess: (data) => {
+    message.success($t('success-message'), { closable: true })
+
+    if (data) {
+      router.push({ name: '/items/[id]', params: { id: data?.id } })
+    }
+  },
+})
 </script>
+
+<fluent locale="en">
+title-placeholder = Title
+title-aria-label = Add a title for this item
+
+save-button = Save
+
+error-message = Error saving note - please try again
+success-message = Successfully saved note
+</fluent>

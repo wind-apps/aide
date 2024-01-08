@@ -22,17 +22,17 @@ CodeBlockLowlight.configure({
 })
 
 interface Props {
-  value?: JSONContent | null
+  modelValue?: JSONContent | null
 }
 
 interface Emits {
-  (name: 'update:value', value: SaveContent): void
+  (name: 'update:modelValue', value: SaveContent): void
 }
 
 const editor = useEditor({
-  content: props.value,
+  content: props.modelValue,
   onUpdate: ({ editor }) => {
-    emits('update:value', {
+    emits('update:modelValue', {
       json: editor.getJSON(),
       text: editor.getText(),
     })

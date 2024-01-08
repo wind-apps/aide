@@ -1,0 +1,19 @@
+{
+  "id": "mig_cme0ekutecua4int566g",
+  "parentID": "mig_cme0baetecua4int565g",
+  "checksum": "1:d8413b48706fad0bb5310da913cc06ba552f43801f20038d36e09179415aad87",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "tagz",
+          "type": "link",
+          "link": {
+            "table": "tags"
+          }
+        },
+        "table": "items"
+      }
+    }
+  ]
+}

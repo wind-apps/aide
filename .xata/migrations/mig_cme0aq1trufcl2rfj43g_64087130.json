@@ -1,0 +1,19 @@
+{
+  "id": "mig_cme0aq1trufcl2rfj43g",
+  "parentID": "mig_cme0al1trufcl2rfj42g",
+  "checksum": "1:64087130f3bd619a40a6c33d1bf4a65ba37481a99426d6139b33a04f0b8341af",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "tags",
+          "type": "link",
+          "link": {
+            "table": "tags"
+          }
+        },
+        "table": "items"
+      }
+    }
+  ]
+}

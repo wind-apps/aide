@@ -1,0 +1,13 @@
+{
+  "id": "mig_cme0fd9trufcl2rfj460",
+  "parentID": "mig_cme0faptrufcl2rfj450",
+  "checksum": "1:57818e531155e1567d9403d782084d1db84a2aa46709d2c0f81e2dc4f2493c57",
+  "operations": [
+    {
+      "removeColumn": {
+        "column": "tagz",
+        "table": "items"
+      }
+    }
+  ]
+}
