@@ -1,5 +1,5 @@
 <template>
-  <ItemLayout :loading="!item">
+  <ItemLayout :loading="isLoading || !item">
     <template #title>
       <n-form-item
         flex="grow"
@@ -8,7 +8,7 @@
         :feedback="validationErrors.title"
       >
         <n-input
-          v-model:value="title"
+          v-model:value="input.title"
           size="large"
           name="title"
           :placeholder="$t('title-placeholder')"
@@ -21,44 +21,47 @@
           </template>
         </n-input>
       </n-form-item>
-      <n-button
-        type="primary"
-        size="large"
-        flex="grow-0 shrink-0"
-        :loading="isSaving"
-        :disabled="isSaving || isDeleting"
-        @click="executeSave()"
-      >
-        {{ $t('save-button') }}
-        <template #icon>
-          <NIcon>
-            <IconSave />
-          </NIcon>
-        </template>
-      </n-button>
-      <n-button
-        type="error"
-        size="large"
-        flex="grow-0 shrink-0"
-        :loading="isDeleting"
-        :disabled="isDeleting || isSaving"
-        @click="confirmDelete"
-      >
-        {{ $t('delete-button') }}
-        <template #icon>
-          <NIcon>
-            <IconSave />
-          </NIcon>
-        </template>
-      </n-button>
+      <n-button-group>
+        <n-button
+          type="primary"
+          size="large"
+          flex="grow-0 shrink-0"
+          :loading="isSaving"
+          :disabled="isSaving || isDeleting"
+          @click="executeSave()"
+        >
+          {{ $t('save-button') }}
+          <template #icon>
+            <NIcon>
+              <IconSave />
+            </NIcon>
+          </template>
+        </n-button>
+        <n-button
+          type="error"
+          size="large"
+          flex="grow-0 shrink-0"
+          :loading="isDeleting"
+          :disabled="isDeleting || isSaving"
+          @click="confirmDelete"
+        >
+          {{ $t('delete-button') }}
+          <template #icon>
+            <NIcon>
+              <IconSave />
+            </NIcon>
+          </template>
+        </n-button>
+      </n-button-group>
     </template>
     <template #tags>
-      <TagsAutoComplete v-model="tags" />
+      <TagsAutoComplete v-model="input.tags" />
     </template>
     <template #editor>
       <Editor
         v-if="item"
-        v-model="content"
+        v-model="input.content"
+        :initial-content="item.content"
       />
     </template>
   </ItemLayout>
@@ -74,15 +77,35 @@ const route = useRoute('/items/[id]')
 const router = useRouter()
 const { $t } = useFluent()
 
-const item = await trpc.item.item.query({ id: route.params.id })
-if (!item) {
-  message.error($t('not-found-message'))
-  router.push({ name: '/' })
-}
+// TODO: Figure out how to make this better!
+// Thinking we can use components for each part, then pass new data via props, which is set as the defaultValue in useVModel?
 
-const title = ref(item?.title ?? '')
-const tags = ref<string[]>(item?.tags ?? [])
-const content = ref<SaveContent>(item?.content)
+const { state: item, execute, isLoading } = useAsyncState(async (id) => {
+  const item = await trpc.item.item.query({ id })
+  if (!item) {
+    message.error($t('not-found-message'))
+    router.push({ name: '/' })
+    return
+  }
+
+  return item
+}, undefined, { immediate: true })
+
+const input = reactive<{ title: string, tags: string[], content: SaveContent | null }>({
+  title: '',
+  tags: [],
+  content: null
+})
+
+watch(() => route.params, async ({ id }) => {
+  console.log({ id })
+  const item = await execute(undefined, id)
+  if (!item) return
+
+  input.content = null
+  input.title = item.title ?? ''
+  input.tags = item.tags ?? []
+}, { immediate: true })
 
 const validationErrors = ref<Record<string, string>>({})
 
@@ -93,11 +116,10 @@ function validationStatus(field: string) {
 const { execute: executeSave, isLoading: isSaving } = useAsyncState(async () => {
   try {
     return await trpc.item.update.mutate(klona({
-      id: item!.id,
-      title: toValue(title),
-      tags: toValue(tags),
-      content: content.value?.json,
-      textContent: content.value?.text,
+      id: route.params.id,
+      ...input,
+      content: input.content?.json,
+      textContent: input.content?.text,
     }))
   }
   catch (err) {
@@ -123,7 +145,7 @@ const { execute: executeSave, isLoading: isSaving } = useAsyncState(async () => 
 
 const { execute: executeDelete, isLoading: isDeleting } = useAsyncState(async () => {
   try {
-    return await trpc.item.delete.mutate({ id: item!.id })
+    return await trpc.item.delete.mutate({ id: route.params.id })
   }
   catch (err) {
     const error = err as Error & { data?: { validation?: { message: string, field: string }[] } }

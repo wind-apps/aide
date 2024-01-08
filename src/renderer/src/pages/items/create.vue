@@ -1,5 +1,5 @@
 <template>
-  <ItemLayout>
+  <ItemLayout :loading="false">
     <template #title>
       <n-form-item
         flex="grow"
