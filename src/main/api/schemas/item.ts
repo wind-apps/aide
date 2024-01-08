@@ -1,8 +1,8 @@
 import type { ItemsRecord } from '@main/db/generated'
-import type { VineObject } from '@vinejs/vine'
 import vine from '@vinejs/vine'
 import { observable } from '@trpc/server/observable'
 import { publicProcedure, router } from '@main/api/trpc'
+import { validateSchema } from '../utils'
 
 const createInput = vine.object({
   title: vine.string().minLength(1),
@@ -22,14 +22,6 @@ const updateInput = vine.object({
 const deleteInput = vine.object({
   id: vine.string(),
 })
-
-// @ts-expect-error We can't pull in the base types from Vine, but this works anyway
-function validateSchema<T extends VineObject>(schema: T) {
-  return (data: any) => vine.validate({
-    schema,
-    data,
-  })
-}
 
 export const itemRouter = router({
   list: publicProcedure

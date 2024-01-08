@@ -89,7 +89,7 @@ const menuOptions = computed<MenuOption[]>(() => {
     },
     {
       key: 'search',
-      label: () => h(RouterLink, { to: '/' }, { default: () => 'Search' }),
+      label: () => h(RouterLink, { to: '/search' }, { default: () => 'Search' }),
       icon: renderIcon(FileSearchIcon),
     },
   ]
