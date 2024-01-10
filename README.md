@@ -1,4 +1,4 @@
-# aide
+# Aide
 
 Aide - a helpful bookmarking and knowledge base app.
 
