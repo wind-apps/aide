@@ -1,3 +1,11 @@
 {
-  "recommendations": ["dbaeumer.vscode-eslint"]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "usernamehw.errorlens",
+    "yoavbls.pretty-ts-errors",
+    "voorjaar.windicss-intellisense",
+    "vue.volar",
+    "octref.vetur",
+    "macabeus.vscode-fluent"
+  ]
 }
