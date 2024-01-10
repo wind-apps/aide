@@ -49,7 +49,7 @@
     </RouterLink>
   </DefineTemplate>
   <div
-    v-if="!grouped"
+    v-if="!grouped && items.length"
     m="t-8"
     w="full"
   >
@@ -60,7 +60,7 @@
     />
   </div>
   <div
-    v-if="grouped"
+    v-if="grouped && items.length"
     m="t-8"
     w="full"
   >
@@ -98,6 +98,35 @@
       />
     </div>
   </div>
+  <div
+    v-if="!items.length && !hideEmpty"
+    m="t-8"
+  >
+    <n-empty
+      :description="emptyMessage ?? $t('empty-message-fallback')"
+      size="small"
+    >
+      <template #icon>
+        <n-icon>
+          <IconFileStack />
+        </n-icon>
+      </template>
+      <template #extra>
+        <n-button
+          type="primary"
+          icon-placement="right"
+          @click="$router.push('/items/create')"
+        >
+          <template #icon>
+            <n-icon>
+              <IconFilePlus2 />
+            </n-icon>
+          </template>
+          Create Note
+        </n-button>
+      </template>
+    </n-empty>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -113,6 +142,10 @@ interface Props {
   loading?: boolean
   /** Whether we have more items to load */
   hasMore?: boolean
+  /** Whether we should hide the empty message component */
+  hideEmpty?: boolean
+  /** A note to show if no items */
+  emptyMessage?: string
 }
 
 interface Emits {
@@ -138,7 +171,7 @@ whenever(targetIsVisible, () => emits('loadMore'))
 
 const currentMonthStr = formatDate()
 
-// TODO: Not sure if this is the most efficient way to do this or not...?
+// TODO: Not sure if this is the most efficient way to do this or not...? WE could possibly do this in the backend, but may mess up with pagination
 const sections = computed(() => {
   if (!props.grouped) { return [] }
 
@@ -164,4 +197,8 @@ subtitle = View all your notes, and sort or filter them
 
 # Replaces the current months name
 header-this-month = Earlier this month
+
+loading-message = Loading More...
+
+empty-message-fallback = No items yet - start your organization journey below
 </fluent>

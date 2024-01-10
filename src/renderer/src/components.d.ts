@@ -9,7 +9,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     CodeBlockComponent: typeof import('./components/Editor/CodeBlockComponent.vue')['default']
     Editor: typeof import('./components/Editor.vue')['default']
+    IconEdit: typeof import('lucide-vue-next')['Edit']
     IconFile: typeof import('lucide-vue-next')['File']
+    IconFilePlus2: typeof import('lucide-vue-next')['FilePlus2']
+    IconFileStack: typeof import('lucide-vue-next')['FileStack']
     IconPlus: typeof import('lucide-vue-next')['Plus']
     IconSave: typeof import('lucide-vue-next')['Save']
     IconSearch: typeof import('lucide-vue-next')['Search']
@@ -24,6 +27,7 @@ declare module 'vue' {
     NDialogProvider: typeof import('naive-ui')['NDialogProvider']
     NDivider: typeof import('naive-ui')['NDivider']
     NDynamicTags: typeof import('naive-ui')['NDynamicTags']
+    NEmpty: typeof import('naive-ui')['NEmpty']
     NFormItem: typeof import('naive-ui')['NFormItem']
     NGlobalStyle: typeof import('naive-ui')['NGlobalStyle']
     NH3: typeof import('naive-ui')['NH3']
