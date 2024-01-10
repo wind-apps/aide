@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: aide-hackathon
+appId: app.wind.aide
+productName: aide
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: aide-hackathon
+  executableName: aide
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

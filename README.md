@@ -1,6 +1,8 @@
-# aide-hackathon
+# aide
 
-An Electron application with Vue and TypeScript
+Aide - a helpful bookmarking and knowledge base app.
+
+Built as an Electron application with Vue and TypeScript
 
 ## Recommended IDE Setup
 
