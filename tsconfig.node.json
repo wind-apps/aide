@@ -9,7 +9,8 @@
       "electron-vite/node",
       "./env.d.ts"
     ],
-    "skipLibCheck": false
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
   },
   "include": [
     "electron.vite.config.*",

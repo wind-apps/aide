@@ -36,13 +36,12 @@ const options = computed<SelectMixedOption[]>(() => {
   return [
     {
       label: 'Auto',
-      value: null,
+      value: '',
     },
     {
       label: '----',
       disabled: true,
-      type: 'ignored',
-      value: null,
+      type: 'ignored'
     },
     ...options,
   ]

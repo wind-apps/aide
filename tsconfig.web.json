@@ -10,7 +10,8 @@
       "@main/*": [
         "./src/main/*"
       ]
-    }
+    },
+    "skipDefaultLibCheck": true
   },
   "include": [
     "src/renderer/src/env.d.ts",
