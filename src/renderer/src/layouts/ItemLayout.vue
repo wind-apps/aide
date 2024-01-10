@@ -4,7 +4,7 @@
     m="x-auto"
     pos="relative"
     h="screen max-screen"
-    p="y-8"
+    p="y-8 x-4"
   >
     <div
       grid="~ cols-1"

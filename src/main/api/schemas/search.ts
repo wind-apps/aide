@@ -10,7 +10,7 @@ export const searchRouter = router({
   items: publicProcedure
     .input(validateSchema(SearchItemInput))
     .query(async ({ ctx, input }) => {
-    // TODO: Update to add pagination
+      // TODO: Update to add pagination
       const items = await ctx.xata.db.items.search(input.query, {
         fuzziness: 2,
         prefix: 'phrase',

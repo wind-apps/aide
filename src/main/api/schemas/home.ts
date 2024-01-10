@@ -11,7 +11,7 @@ export const homeRouter = router({
     .input(validateSchema(HomeListInput))
     .query(async ({ input, ctx }) => {
       const currentItems = await ctx.xata.db.items
-        .select(['id', 'title', 'xata.updatedAt'])
+        .select(['id', 'title', 'tags'])
         .getPaginated({
           sort: input?.after ? undefined : { 'xata.updatedAt': 'desc' },
           pagination: {
