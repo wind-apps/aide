@@ -17,24 +17,25 @@ Make sure you have [Volta](https://volta.sh) installed, as it will handle instal
 ### Install
 
 ```bash
-$ pnpm install
+pnpm install
+pnpm run generate
 ```
 
 ### Development
 
 ```bash
-$ pnpm dev
+pnpm dev
 ```
 
 ### Build
 
 ```bash
 # For windows
-$ pnpm build:win
+pnpm build:win
 
 # For macOS
-$ pnpm build:mac
+pnpm build:mac
 
 # For Linux
-$ pnpm build:linux
+pnpm build:linux
 ```
