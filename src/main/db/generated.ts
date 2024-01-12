@@ -15,6 +15,19 @@ const tables = [
       { name: "textContent", type: "text" },
       { name: "tags", type: "multiple" },
     ],
+    revLinks: [{ column: "item", table: "items_tags" }],
+  },
+  {
+    name: "tags",
+    columns: [{ name: "name", type: "string", unique: true }],
+    revLinks: [{ column: "tag", table: "items_tags" }],
+  },
+  {
+    name: "items_tags",
+    columns: [
+      { name: "tag", type: "link", link: { table: "tags" } },
+      { name: "item", type: "link", link: { table: "items" } },
+    ],
   },
 ] as const;
 
@@ -24,8 +37,16 @@ export type InferredTypes = SchemaInference<SchemaTables>;
 export type Items = InferredTypes["items"];
 export type ItemsRecord = Items & XataRecord;
 
+export type Tags = InferredTypes["tags"];
+export type TagsRecord = Tags & XataRecord;
+
+export type ItemsTags = InferredTypes["items_tags"];
+export type ItemsTagsRecord = ItemsTags & XataRecord;
+
 export type DatabaseSchema = {
   items: ItemsRecord;
+  tags: TagsRecord;
+  items_tags: ItemsTagsRecord;
 };
 
 const DatabaseClient = buildClient();

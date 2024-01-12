@@ -38,6 +38,8 @@ export const itemRouter = router({
   create: publicProcedure
     .input(validateSchema(createInput))
     .mutation(async ({ input, ctx }) => {
+      // TODO: Handle upserting + joining tags
+
       const item = await ctx.xata.db.items.create(input)
       ctx.events.item.emit('create', item)
       return item
@@ -45,6 +47,8 @@ export const itemRouter = router({
   update: publicProcedure
     .input(validateSchema(updateInput))
     .mutation(async ({ input, ctx }) => {
+      // TODO: Handle upserting + joining tags
+
       const item = await ctx.xata.db.items.update(input)
       if (item) {
         ctx.events.item.emit('update', item)
