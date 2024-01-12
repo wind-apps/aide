@@ -130,10 +130,16 @@
 </template>
 
 <script setup lang="ts">
-import type { RouterOutput } from '@renderer/composables/trpc'
-
-type ListOutput = RouterOutput['home']['list']
-type Item = ListOutput['items'][0]
+/** Generic type, as we use this for different resources */
+interface Item {
+  id: string
+  title?: string | null
+  tags?: string[] | null
+  xata: {
+    updatedAt: string
+    createdAt: string
+  }
+}
 
 interface Props {
   items: Item[]
@@ -180,7 +186,7 @@ const sections = computed(() => {
     const existing = group.get(dateStr) ?? []
 
     return group.set(dateStr, [...existing, item])
-  }, new Map<string, ListOutput['items']>())
+  }, new Map<string, Item[]>())
 
   return Array.from(groups).map(([title, items]) => {
     return {
