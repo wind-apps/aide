@@ -14,7 +14,10 @@ function navigate() {
 </script>
 
 <template>
-  <NButton @click="navigate">
+  <NButton
+    secondary
+    @click="navigate"
+  >
     <template #icon>
       <slot name="icon" />
     </template>

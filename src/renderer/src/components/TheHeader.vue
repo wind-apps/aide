@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { FileSearchIcon, FileTextIcon, TagsIcon } from 'lucide-vue-next'
+import { FileSearchIcon, FileTextIcon, PaintBucketIcon } from 'lucide-vue-next'
 import { type MenuOption, NIcon } from 'naive-ui'
 import { RouterLink } from 'vue-router/auto'
 
@@ -44,7 +44,7 @@ const recentItems = ref(data ?? [])
 trpc.navigation.subscribeRecentItems.subscribe(undefined, {
   onData: (updatedItems) => {
     recentItems.value = updatedItems
-  }
+  },
 })
 
 const route = useRoute()
@@ -63,11 +63,23 @@ function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
 
+const devMenuOptions = computed<MenuOption[]>(() => {
+  if (import.meta.env.PROD) { return [] }
+
+  return [
+    {
+      key: 'styles',
+      label: () => h(RouterLink, { to: '/styles' }, { default: () => 'Styles' }),
+      icon: renderIcon(PaintBucketIcon),
+    },
+  ]
+})
+
 const menuOptions = computed<MenuOption[]>(() => {
   const home: MenuOption = {
     key: '/',
     label: () => h(RouterLink, { to: '/' }, { default: () => 'Home' }),
-    children: [
+    children: recentItems.value.length ? [
       {
         type: 'group',
         label: 'Recent',
@@ -77,21 +89,22 @@ const menuOptions = computed<MenuOption[]>(() => {
           label: () => h(RouterLink, { to: { name: '/items/[id]', params: { id: item.id } } }, { default: () => item.title }),
         })),
       },
-    ],
+    ] : [],
   }
 
   return [
     home,
     {
-      key: 'collections',
-      label: () => h(RouterLink, { to: '/' }, { default: () => 'Collections' }),
-      icon: renderIcon(TagsIcon),
-    },
-    {
       key: 'search',
       label: () => h(RouterLink, { to: '/search' }, { default: () => 'Search' }),
       icon: renderIcon(FileSearchIcon),
     },
+    {
+      key: 'ask',
+      label: () => h(RouterLink, { to: '/ask' }, { default: () => 'Ask Aide' }),
+      icon: renderIcon(FileSearchIcon),
+    },
+    ...devMenuOptions.value,
   ]
 })
 </script>

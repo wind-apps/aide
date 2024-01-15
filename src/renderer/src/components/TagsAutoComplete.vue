@@ -22,7 +22,7 @@
     <template #trigger="{ activate, disabled }">
       <n-button
         type="primary"
-        dashed
+        secondary
         size="small"
         :disabled="disabled"
         @click="activate()"
@@ -56,8 +56,8 @@ const tagInputDebounced = refDebounced(tagInput, 300)
 
 const isSearching = ref(false)
 const searchedTags = computedAsync(async () => {
-  return await trpc.item.tags.query({query: tagInputDebounced.value })
-}, [], {lazy: false, evaluating: isSearching })
+  return await trpc.item.tags.query({ query: tagInputDebounced.value })
+}, [], { lazy: false, evaluating: isSearching })
 
 const suggestions = computed(() => props.options ? [...props.options, ...searchedTags.value] : searchedTags.value)
 

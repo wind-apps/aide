@@ -113,6 +113,7 @@
       </template>
       <template #extra>
         <n-button
+          secondary
           type="primary"
           icon-placement="right"
           @click="$router.push('/items/create')"

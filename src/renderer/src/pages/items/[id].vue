@@ -26,6 +26,7 @@
           type="primary"
           size="large"
           flex="grow-0 shrink-0"
+          secondary
           :loading="isSaving"
           :disabled="isSaving || isDeleting"
           @click="executeSave()"
@@ -41,6 +42,7 @@
           type="error"
           size="large"
           flex="grow-0 shrink-0"
+          secondary
           :loading="isDeleting"
           :disabled="isDeleting || isSaving"
           @click="confirmDelete"
@@ -94,13 +96,13 @@ const { state: item, execute, isLoading } = useAsyncState(async (id) => {
 const input = reactive<{ title: string, tags: string[], content: SaveContent | null }>({
   title: '',
   tags: [],
-  content: null
+  content: null,
 })
 
 watch(() => route.params, async ({ id }) => {
   console.log({ id })
   const item = await execute(undefined, id)
-  if (!item) return
+  if (!item) { return }
 
   input.content = null
   input.title = item.title ?? ''

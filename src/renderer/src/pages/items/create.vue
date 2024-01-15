@@ -22,6 +22,7 @@
         </n-input>
       </n-form-item>
       <n-button
+        secondary
         type="primary"
         size="large"
         flex="grow-0 shrink-0"

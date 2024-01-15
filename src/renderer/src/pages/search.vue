@@ -26,6 +26,7 @@
           </template>
         </n-input>
         <n-button
+          secondary
           type="primary"
           @click="handleSearch"
         >
