@@ -3,6 +3,8 @@ import { TRPCError } from '@trpc/server'
 
 const migrationsJSON = import.meta.glob('../../../../.xata/migrations/*.json', { eager: true, import: 'default' })
 
+// TODO: Add a check to see if tables exist, and update if so.
+
 export const migrationsRouter = router({
   initialise: authenticatedProcedure
     .mutation(async ({ ctx }) => {
