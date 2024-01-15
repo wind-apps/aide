@@ -4,7 +4,10 @@
   "description": "A helpful bookmarking and knowledge base app.",
   "author": "Travis Reynolds <travis@travisreynolds.dev>",
   "homepage": "github:wind-apps/aide",
-  "repository": "https://github.com/wind-apps/aide",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wind-apps/aide.git"
+  },
   "main": "./out/main/index.js",
   "volta": {
     "node": "18.19.0"
