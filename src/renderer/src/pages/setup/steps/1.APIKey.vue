@@ -66,7 +66,7 @@ const saveKeyErrorMessage = computed(() => saveKeyError.value instanceof Error ?
 <fluent locale="en">
 title = Authenticate
 subtitle = Xata API Key
-content = To start, you'll need an Xata API key. To find this, head to the <a href="https://app.xata.io/signin?mode=signup">Xata website</a> and sign in/create an account. Once you are logged in, go to your <a href="https://app.xata.io/settings">account settings</a>. Scroll down to the <strong>Personal API Keys</strong> section, and click <strong>Add a key</strong> - name this key Aide, click save, then copy the resulting API key and paste it below.
+content = To start, you'll need an Xata API key. To find this, head to the <a href="https://app.xata.io/signin?mode=signup" target="_blank">Xata website</a> and sign in/create an account. Once you are logged in, go to your <a href="https://app.xata.io/settings" target="_blank">account settings</a>. Scroll down to the <strong>Personal API Keys</strong> section, and click <strong>Add a key</strong> - name this key Aide, click save, then copy the resulting API key and paste it below.
 
 key-input =
   .label = API Key
@@ -76,3 +76,11 @@ key-input =
 next-button = Next
 back-button = Back
 </fluent>
+
+<style lang="scss">
+.step-content {
+  a {
+    @apply underline;
+  }
+}
+</style>
