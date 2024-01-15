@@ -1,5 +1,5 @@
 appId: app.wind.aide
-productName: aide
+productName: Aide
 directories:
   buildResources: build
 files:
