@@ -1,4 +1,4 @@
-import { publicProcedure, router } from '@main/api/trpc'
+import { authenticatedProcedure, router } from '@main/api/trpc'
 import type { XataClient } from '@main/db/generated'
 import { observable } from '@trpc/server/observable'
 
@@ -22,10 +22,10 @@ async function getRecentItems(xata: XataClient) {
 }
 
 export const navigationRouter = router({
-  recentItems: publicProcedure.query(async ({ ctx }) => {
+  recentItems: authenticatedProcedure.query(async ({ ctx }) => {
     return await getRecentItems(ctx.xata)
   }),
-  subscribeRecentItems: publicProcedure.subscription(({ ctx }) => {
+  subscribeRecentItems: authenticatedProcedure.subscription(({ ctx }) => {
     return observable<Awaited<ReturnType<typeof getRecentItems>>>((emit) => {
       const onChange = async () => {
         const recentItems = await getRecentItems(ctx.xata)

@@ -45,7 +45,11 @@ declare module 'vue-router/auto/routes' {
     '/items/[id]': RouteRecordInfo<'/items/[id]', '/items/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/items/create': RouteRecordInfo<'/items/create', '/items/create', Record<never, never>, Record<never, never>>,
     '/search': RouteRecordInfo<'/search', '/search', Record<never, never>, Record<never, never>>,
-    '/setup': RouteRecordInfo<'/setup', '/setup', Record<never, never>, Record<never, never>>,
+    '/setup/': RouteRecordInfo<'/setup/', '/setup', Record<never, never>, Record<never, never>>,
+    '/setup/steps/1.APIKey': RouteRecordInfo<'/setup/steps/1.APIKey', '/setup/steps/1/APIKey', Record<never, never>, Record<never, never>>,
+    '/setup/steps/2.Configure - Workspace': RouteRecordInfo<'/setup/steps/2.Configure - Workspace', '/setup/steps/2/Configure - Workspace', Record<never, never>, Record<never, never>>,
+    '/setup/steps/3.Configure - Database': RouteRecordInfo<'/setup/steps/3.Configure - Database', '/setup/steps/3/Configure - Database', Record<never, never>, Record<never, never>>,
+    '/setup/steps/4.Finish': RouteRecordInfo<'/setup/steps/4.Finish', '/setup/steps/4/Finish', Record<never, never>, Record<never, never>>,
     '/styles': RouteRecordInfo<'/styles', '/styles', Record<never, never>, Record<never, never>>,
   }
 }

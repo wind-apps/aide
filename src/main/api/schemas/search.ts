@@ -1,5 +1,5 @@
 import vine from '@vinejs/vine'
-import { publicProcedure, router } from '@main/api/trpc'
+import { authenticatedProcedure, router } from '@main/api/trpc'
 import { validateSchema } from '../utils'
 
 const SearchItemInput = vine.object({
@@ -7,7 +7,7 @@ const SearchItemInput = vine.object({
 })
 
 export const searchRouter = router({
-  items: publicProcedure
+  items: authenticatedProcedure
     .input(validateSchema(SearchItemInput))
     .query(async ({ ctx, input }) => {
       // TODO: Update to add pagination

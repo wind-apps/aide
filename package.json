@@ -40,6 +40,7 @@
     "@vueuse/core": "^10.7.1",
     "@xata.io/client": "^0.28.3",
     "dayjs": "^1.11.10",
+    "electron-store": "^8.1.0",
     "electron-trpc": "^0.5.2",
     "electron-updater": "^6.1.7",
     "emittery": "^1.0.1",

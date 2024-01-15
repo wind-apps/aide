@@ -10,7 +10,7 @@ export type RouterInput = inferRouterInputs<AppRouter>
 export type RouterOutput = inferRouterOutputs<AppRouter>
 
 export const trpc = createTRPCProxyClient<AppRouter>({
-  links: [ipcLink()],
+  links: [ipcLink()]
 })
 
 export function useTRPC() {

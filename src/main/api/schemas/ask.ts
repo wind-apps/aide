@@ -1,5 +1,5 @@
 import vine from '@vinejs/vine'
-import { publicProcedure, router } from '@main/api/trpc'
+import { authenticatedProcedure, router } from '@main/api/trpc'
 import { validateSchema } from '../utils'
 
 const AskInput = vine.object({
@@ -7,7 +7,7 @@ const AskInput = vine.object({
 })
 
 export const askRouter = router({
-  items: publicProcedure
+  items: authenticatedProcedure
     .input(validateSchema(AskInput))
     .query(async ({ ctx, input }) => {
       const response = await ctx.xata.db.items.ask(input.query, {
@@ -32,7 +32,7 @@ export const askRouter = router({
 
       return {
         answer: response.answer,
-        items: records
+        items: records,
       }
     }),
 })

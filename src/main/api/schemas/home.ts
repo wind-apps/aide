@@ -1,4 +1,4 @@
-import { publicProcedure, router } from '@main/api/trpc'
+import { authenticatedProcedure, router } from '@main/api/trpc'
 import vine from '@vinejs/vine'
 import { validateSchema } from '../utils'
 
@@ -7,7 +7,7 @@ const HomeListInput = vine.object({
 }).optional()
 
 export const homeRouter = router({
-  list: publicProcedure
+  list: authenticatedProcedure
     .input(validateSchema(HomeListInput))
     .query(async ({ input, ctx }) => {
       const currentItems = await ctx.xata.db.items

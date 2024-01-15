@@ -25,7 +25,7 @@ export default defineConfig({
     plugins: [
       externalizeDepsPlugin({
         // Exclude plugins that are already ESM
-        exclude: ['emittery', '@vinejs/vine'],
+        exclude: ['emittery', '@vinejs/vine', 'electron-store'],
       }),
     ],
   },

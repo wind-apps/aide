@@ -1,7 +1,7 @@
 import type { ItemsRecord } from '@main/db/generated'
 import vine from '@vinejs/vine'
 import { observable } from '@trpc/server/observable'
-import { publicProcedure, router } from '@main/api/trpc'
+import { authenticatedProcedure, router } from '@main/api/trpc'
 import { validateSchema } from '../utils'
 
 const createInput = vine.object({
@@ -24,18 +24,18 @@ const deleteInput = vine.object({
 })
 
 export const itemRouter = router({
-  list: publicProcedure
+  list: authenticatedProcedure
     .query(async ({ ctx }) => {
       const items = ctx.xata.db.items
 
       return items.getPaginated()
     }),
-  item: publicProcedure
+  item: authenticatedProcedure
     .input(validateSchema(vine.object({ id: vine.string() })))
     .query(async ({ input, ctx }) => {
       return await ctx.xata.db.items.getFirst({ filter: { id: { $is: input.id } } })
     }),
-  create: publicProcedure
+  create: authenticatedProcedure
     .input(validateSchema(createInput))
     .mutation(async ({ input, ctx }) => {
       // TODO: Handle upserting + joining tags
@@ -44,7 +44,7 @@ export const itemRouter = router({
       ctx.events.item.emit('create', item)
       return item
     }),
-  update: publicProcedure
+  update: authenticatedProcedure
     .input(validateSchema(updateInput))
     .mutation(async ({ input, ctx }) => {
       // TODO: Handle upserting + joining tags
@@ -55,7 +55,7 @@ export const itemRouter = router({
       }
       return item
     }),
-  delete: publicProcedure
+  delete: authenticatedProcedure
     .input(validateSchema(deleteInput))
     .mutation(async ({ input, ctx }) => {
       const item = await ctx.xata.db.items.delete(input)
@@ -64,7 +64,7 @@ export const itemRouter = router({
       }
       return item
     }),
-  subscribe: publicProcedure.subscription(({ ctx }) => {
+  subscribe: authenticatedProcedure.subscription(({ ctx }) => {
     return observable<ItemsRecord>((emit) => {
       const onChange = (data: ItemsRecord) => emit.next(data)
 
@@ -75,7 +75,7 @@ export const itemRouter = router({
       }
     })
   }),
-  tags: publicProcedure
+  tags: authenticatedProcedure
     .input(validateSchema(vine.object({ query: vine.string().optional() })))
     .query(async ({ input, ctx }) => {
       if (typeof input.query === 'string') {

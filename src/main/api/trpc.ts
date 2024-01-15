@@ -1,12 +1,22 @@
-import { initTRPC } from '@trpc/server'
+import store from '@main/store'
+import { createClient } from '@main/db/xata'
 import { errors } from '@vinejs/vine'
-import xata from '@main/db/xata'
+import { TRPCError, initTRPC } from '@trpc/server'
 import { events } from './events'
 
 export async function createContext() {
-  // TODO: Adding Xata here, as later we will want to pass in our own API key
+  // TODO: May want to watch for this to update CTX, or move to a middleware so it runs every request?
+  const xataOptions = store.get('xata')
+  console.log({ xataOptions })
+  /**
+   * As we initialise Xata with the users provided API key, we need to instantiate with that key on load,
+   * then pass it to context - rather than importing the Xata client directly, which would try to use keys from the ENV
+   */
+  const xata = xataOptions ? createClient(xataOptions) : undefined
+
   return {
     xata,
+    store,
     events,
   }
 }
@@ -33,3 +43,16 @@ const t = initTRPC.context<typeof createContext>().create({
  */
 export const router = t.router
 export const publicProcedure = t.procedure
+
+export const authenticatedProcedure = publicProcedure.use(({ ctx, next }) => {
+  if (!ctx.store.has('xata.apiKey') || !ctx.xata) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' })
+  }
+
+  return next({
+    ctx: {
+      ...ctx,
+      xata: ctx.xata!
+    }
+  })
+})
