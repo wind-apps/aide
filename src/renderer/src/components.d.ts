@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     CodeBlockComponent: typeof import('./components/Editor/CodeBlockComponent.vue')['default']
     Editor: typeof import('./components/Editor.vue')['default']
+    IconBot: typeof import('lucide-vue-next')['Bot']
     IconEdit: typeof import('lucide-vue-next')['Edit']
     IconFile: typeof import('lucide-vue-next')['File']
     IconFilePlus2: typeof import('lucide-vue-next')['FilePlus2']
@@ -36,6 +37,7 @@ declare module 'vue' {
     NIcon: typeof import('naive-ui')['NIcon']
     NInput: typeof import('naive-ui')['NInput']
     NInputGroup: typeof import('naive-ui')['NInputGroup']
+    NINputGroup: typeof import('naive-ui')['NINputGroup']
     NLoadingBarProvider: typeof import('naive-ui')['NLoadingBarProvider']
     NMenu: typeof import('naive-ui')['NMenu']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
