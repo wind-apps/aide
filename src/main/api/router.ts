@@ -5,6 +5,7 @@ import { homeRouter } from './schemas/home'
 import { searchRouter } from './schemas/search'
 import { askRouter } from './schemas/ask'
 import { authRouter } from './schemas/auth'
+import { migrationsRouter } from './schemas/migrations'
 
 export const appRouter = router({
   auth: authRouter,
@@ -12,7 +13,8 @@ export const appRouter = router({
   navigation: navigationRouter,
   home: homeRouter,
   search: searchRouter,
-  ask: askRouter
+  ask: askRouter,
+  migrations: migrationsRouter,
 })
 
 export type AppRouter = typeof appRouter

@@ -1,26 +1,23 @@
 import vine from '@vinejs/vine'
 import { authenticatedProcedure, publicProcedure, router } from '@main/api/trpc'
-import createClient from '@main/db/xata'
 import { TRPCError } from '@trpc/server'
-import { validateSchema } from '../utils'
 import { XataApiClient } from '@xata.io/client'
-
-const AuthenticateInput = vine.object({
-  apiKey: vine.string(),
-  branch: vine.string().optional(),
-})
+import { validateSchema } from '../utils'
 
 export const authRouter = router({
   isAuthenticated: publicProcedure
     .query(async ({ ctx }) => {
-      const hasKey = ctx.store.has('xata.apiKey')
-      if (!hasKey) { return false }
+      const xata = ctx.store.get('xata')
+
+      // TODO: Move this to another setup check? We need to check if we have migrated as well.
+      const hasAllKeys = xata && xata.apiKey && xata.region && xata.database && xata.workspace
+      if (!hasAllKeys) return false
 
       const user = await ctx.xata?.api.user.getUser()
       return !!user
     }),
   authenticate: publicProcedure
-    .input(validateSchema(AuthenticateInput))
+    .input(validateSchema(vine.object({ apiKey: vine.string() })))
     .mutation(async ({ input, ctx }) => {
       // Make test request to Xata, to make sure key works
       try {
@@ -76,7 +73,13 @@ export const authRouter = router({
   }),
   saveDatabase: authenticatedProcedure.input(validateSchema(vine.object({ database: vine.string() })))
     .mutation(async ({ input, ctx }) => {
+      const workspaceId = ctx.store.get('xata.workspace')
+      if (typeof workspaceId !== 'string') { throw new TRPCError({ message: 'Missing required workspace ID', code: 'BAD_REQUEST' }) }
+
+      const database = await ctx.xata.api.database.getDatabaseMetadata({ workspace: workspaceId, database: input.database })
+
       ctx.store.set('xata.database', input.database)
+      ctx.store.set('xata.region', database.region)
     }),
   createDatabase: authenticatedProcedure
     .input(validateSchema(vine.object({ name: vine.string(), region: vine.string() })))

@@ -46,5 +46,6 @@ const currentStepComp = computed(() => steps[currentStep.value - 1])
 step-1-title = API Key
 step-2-title = Workspace
 step-3-title = Database
-step-4-title = Finish Up
+step-4-title = Migrations
+step-5-title = Finish Up
 </fluent>

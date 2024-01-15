@@ -83,8 +83,6 @@ const emits = defineEmits<Emits>()
 
 const { $ta } = useFluent()
 
-console.log($ta('database-create'))
-
 const { state: databases, isLoading: isLoadingDatabases } = useAsyncState(async () => await trpc.auth.listDatabases.query({ workspaceId: undefined }), [], { immediate: true })
 const { state: regions, isLoading: isLoadingRegions } = useAsyncState(async () => await trpc.auth.listDatabaseRegions.query(), [], { immediate: true })
 

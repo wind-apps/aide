@@ -100,7 +100,6 @@ const input = reactive<{ title: string, tags: string[], content: SaveContent | n
 })
 
 watch(() => route.params, async ({ id }) => {
-  console.log({ id })
   const item = await execute(undefined, id)
   if (!item) { return }
 
@@ -129,7 +128,6 @@ const { execute: executeSave, isLoading: isSaving } = useAsyncState(async () => 
     console.error(error)
 
     if (error.data?.validation) {
-      console.log(error.data.validation)
       validationErrors.value = Object.fromEntries(error.data.validation.map(err => [err.field, err.message]))
     }
 
@@ -154,7 +152,6 @@ const { execute: executeDelete, isLoading: isDeleting } = useAsyncState(async ()
     console.error(error)
 
     if (error.data?.validation) {
-      console.log(error.data.validation)
       validationErrors.value = Object.fromEntries(error.data.validation.map(err => [err.field, err.message]))
     }
 

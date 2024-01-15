@@ -34,7 +34,6 @@ tryOnBeforeMount(async () => {
 
 // TODO: Probably a better way to handle this.
 onErrorCaptured((error) => {
-  console.log('checking error', error.name)
   if (error.name === 'TRPCClientError') {
     if (error.message === 'UNAUTHORIZED' && route.name !== '/setup/') {
       message.error($t('unauthorized-error'))

@@ -43,7 +43,6 @@ const emits = defineEmits<Emits>()
 
 const { $ta, $t } = useFluent()
 
-
 defineExpose({
   title: $t('title'),
 })
@@ -53,10 +52,7 @@ const apiKey = ref()
 const { isLoading: isSavingKey, execute: saveKey, error: saveKeyError } = useAsyncState(async () => {
   if (!apiKey.value) { throw new Error($ta('key-input').required) }
 
-  await trpc.auth.authenticate.mutate({
-    apiKey: apiKey.value,
-    branch: undefined,
-  })
+  await trpc.auth.authenticate.mutate({ apiKey: apiKey.value })
 
   emits('next')
 }, undefined, {

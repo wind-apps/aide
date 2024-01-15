@@ -5,9 +5,8 @@ import { TRPCError, initTRPC } from '@trpc/server'
 import { events } from './events'
 
 export async function createContext() {
-  // TODO: May want to watch for this to update CTX, or move to a middleware so it runs every request?
   const xataOptions = store.get('xata')
-  console.log({ xataOptions })
+
   /**
    * As we initialise Xata with the users provided API key, we need to instantiate with that key on load,
    * then pass it to context - rather than importing the Xata client directly, which would try to use keys from the ENV

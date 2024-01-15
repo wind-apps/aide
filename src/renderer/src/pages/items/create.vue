@@ -79,7 +79,6 @@ const { execute, isLoading } = useAsyncState(async () => {
     console.error(error)
 
     if (error.data?.validation) {
-      console.log(error.data.validation)
       validationErrors.value = Object.fromEntries(error.data.validation.map(err => [err.field, err.message]))
     }
 

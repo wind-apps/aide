@@ -49,7 +49,8 @@ declare module 'vue-router/auto/routes' {
     '/setup/steps/1.APIKey': RouteRecordInfo<'/setup/steps/1.APIKey', '/setup/steps/1/APIKey', Record<never, never>, Record<never, never>>,
     '/setup/steps/2.Configure - Workspace': RouteRecordInfo<'/setup/steps/2.Configure - Workspace', '/setup/steps/2/Configure - Workspace', Record<never, never>, Record<never, never>>,
     '/setup/steps/3.Configure - Database': RouteRecordInfo<'/setup/steps/3.Configure - Database', '/setup/steps/3/Configure - Database', Record<never, never>, Record<never, never>>,
-    '/setup/steps/4.Finish': RouteRecordInfo<'/setup/steps/4.Finish', '/setup/steps/4/Finish', Record<never, never>, Record<never, never>>,
+    '/setup/steps/4.Migrations': RouteRecordInfo<'/setup/steps/4.Migrations', '/setup/steps/4/Migrations', Record<never, never>, Record<never, never>>,
+    '/setup/steps/5.Finish': RouteRecordInfo<'/setup/steps/5.Finish', '/setup/steps/5/Finish', Record<never, never>, Record<never, never>>,
     '/styles': RouteRecordInfo<'/styles', '/styles', Record<never, never>, Record<never, never>>,
   }
 }
