@@ -49,6 +49,6 @@ export const store = new Store<StoreShape>({
 })
 
 // Wipe the store
-store.clear()
+// store.clear()
 
 export default store
