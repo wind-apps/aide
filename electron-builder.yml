@@ -40,4 +40,3 @@ npmRebuild: false
 publish:
   provider: github
   protocol: https
-  url: https://github.com/wind-apps/aide
