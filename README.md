@@ -2,7 +2,7 @@
 
 Aide - a helpful bookmarking and knowledge base app.
 
-Built as an Electron application with Vue and TypeScript
+Built as an Electron application with Vue and TypeScript - it uses Xata as a database.
 
 ## Recommended IDE Setup
 
