@@ -8,8 +8,8 @@ export default defineConfig({
   ],
   theme: {
     fontFamily: {
-      sans: ['Lexend', 'sans'],
-      mono: ['JetBrainsMono', 'monospace']
+      sans: ['Lexend Variable', 'sans'],
+      mono: ['Fira Code Variable', 'monospace']
     },
     extend: {},
   },
